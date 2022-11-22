@@ -1,0 +1,3 @@
+[submodule "alzabo"]
+	path = alzabo
+	url = git@github.com:ParkerICI/alzabo.git

@@ -1,0 +1,219 @@
+# -*- compile-command: "cd ..;bin/build-guide-pandoc.sh"  ; after-save-hook: (recompile) -*-
+
+#+TITLE: Enflame User Guide
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/icon?family=Material+Icons" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../enflame.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../enflame-guide.css" />
+#+HTML_CONTAINER: container
+
+
+* Introduction
+
+[[http://enflame.parkerici.org/index.html][Enflame]] is a visual query builder for CANDEL. You can construct a query by combining blocks. You can then run the query against a selected CANDEL database, or you can take the generated text representation of it (in both Clojure and R ([[https://candel.parkerici.org/docs/using_candel/querying.html][Wick]]) formats) and include them in your own code. Enflame also includes the ability to do some simple data visualization on the returned data, also by using blocks and block structure (see [[Visualization blocks]]).
+
+[[https://candel.parkerici.org/][CANDEL]] is a graph database containing roughly 35 different /types/ of /entity/ (or object). Eg types include =gene=, =subject=, and =sample= .  An interactive version of [[http://enflame.parkerici.org/alzabo/schema/1.0.0/index.html][the complete schema]] is available. Queries specify a type and some constraints on that type, which might involve relationships with other entities.
+
+An [[interactive tutorial][tutorial.html]] is available, with interactive examples showing how to compose queries.
+
+
+* UI Overview
+
+These are various components of the Enflame user interface, described below:
+
+#+attr_html: :width 1000px
+[[file:layout.png]]
+
+** Block palette
+
+This is the source of all blocks, organized by semantic type. Each type has a unique color that is reflected in the blocks and in the browsers.
+
+** Block canvas
+
+This is where you compose blocks into a query.
+
+Note: one non-obvious feature – you can put arbitrary blocks into the canvas, including scrap parts. The block structure closest to the upper-left hand corner will be the one that actually is turned into a query, and stray blocks will be ignored. 
+
+** Results Browser
+
+This is where the results of queries are displayed. Columns are colored by type. The columns with names like 𝞙|dataset indicate the actual queried entity itself – other columns are (typically) attributes of that entity. For instance, this table is the result of a query on =subject= s. The first column represents the subject entity itself, the other columns (of the same color) are individual attributes of that entity.
+
+#+attr_html: :width 1000px
+[[file:Screen_Shot_2019-09-23_at_5.35.35_PM.png]]
+
+
+Values that are entities themselves are displayed with their unique-id if available, and as links. The links will open up that entity in the entity browser.
+
+** Entity Browser
+
+The entity browser shows a single entity and its values, and lets you navigate through the graph structure of the CANDEL.
+
+
+The [[file:Screen_Shot_2019-10-14_at_12.04.15_PM.png]] button will generate and add to the workspace a block that produces the current entity. For instance, if the current browser entity is a disease:
+
+
+[[file:Screen_Shot_2019-10-14_at_12.08.27_PM.png]]
+
+Clicking the Blockify button will generate a block like this:
+
+
+[[file:Screen_Shot_2019-10-14_at_12.09.53_PM.png]]
+
+
+
+** Other right hand panes
+The right-hand column of the display has a bunch of separate panes for particular purposes.
+*** DB selector
+This pane lets you choose the server and database to query against.
+
+*** Query
+This pane contains the generated query (in Clojure format) and a *Go* button to start a query. The top bar also includes a selector for the row limit, which controls how many data rows are returned from a query. 
+
+When a query is running, the above extras are replaced with a notice and an interrupt button, so you can stop a long-running query if you need to.
+
+*** Wick
+This contains the generated query in Wick (R) format.
+
+You can run these queries by passing the text as an argument to the function:
+#+BEGIN_SRC
+wick::do_query(“....”)
+#+END_SRC
+
+*** Library
+
+The library pane allows you to save a query. Queries are saved with the following information:
+- a picture of the block structure
+- an automatically generated text version of the query (eg =[measurements where [nanostring-count > 0]]=)
+- an optional user-supplied description.
+
+*** Graph
+
+The graph pane shows a visualization of the returned data, see [[Visualization blocks]].
+
+  
+* Blocks and their semantics
+
+Blocks are used to specify a query and to do processing (visualization) on the returned results. 
+
+
+** Query blocks
+
+Query blocks are organized by semantic type (ie =subject= or =drug=), each of which has a separate color.
+
+
+[[file:Screen_Shot_2019-11-03_at_5.15.00_PM.png]]
+
+The types and colors are displayed on the left-hand side of the Enflame screen:
+
+
+[[file:Screen_Shot_2019-09-20_at_4.36.23_PM.png]]
+
+For each type, there are a few different kinds of block availble, described below. You get blocks by clicking on a type name, which will expose a palette of available blocks
+
+
+[[file:Screen_Shot_2019-09-20_at_4.37.43_PM.png]]
+
+
+
+
+
+*** Entity blocks
+
+*Entity blocks* have a nub on their left hand side. You can think of them as generating a single entity (eg a =gene=) or a set of entities.
+
+There are two kinds of entity blocks. A *named entity block* returns a single entity, For instance this produces the single subject with the given id:
+
+[[file:Screen_Shot_2019-09-20_at_12.45.50_PM.png]]
+
+A *query entity block* produces a set of entities of a given type. For instance, this produces the set of all subjects:
+
+
+[[file:Screen_Shot_2019-11-03_at_5.16.12_PM.png]]
+
+
+Query entity blocks have an additional selector that lets you specify the output type. The options are:
+- =name=: (default) include the entity itself and its label (unique-id) if available
+- =everything=: include the entity and all of its attributes
+- =count=: don՚t return the entity itself, but instead the count of its unique values based on the rest of the query
+- =omit=: don՚t return anything for this entity
+
+*** Attribute blocks
+
+*Attribute blocks* specify a /constraint/ on query entity block. They fit into the right-hand side of  a query entity block of the same color (type). Eg, here՚s how you could use three attribute blocks to get a list of all the subjects who are dead white males:
+
+
+[[file:Screen_Shot_2019-11-03_at_5.16.44_PM.png]]
+
+
+Note that the constraints are ANDed together. If you want to specify an OR, there is a special block for that. This query specifies subjects that are alive *and* are either Asian *or* Pacific Islander:
+
+
+[[file:Screen_Shot_2019-11-03_at_5.17.23_PM.png]]
+
+
+
+**** Entity inputs
+
+Some attribute blocks require an entity block as an input. The query below returns diseases of white male subjects. The attribute block is in the middle (“subject is”) and connects two query entity blocks.
+
+
+[[file:Screen_Shot_2019-11-03_at_5.56.29_PM.png]]
+
+
+
+**** Complex relationships
+
+Most attribute blocks represent either a primitive-valued property of an entity type, or a semantic relation that corresponds to a single edge on the schema graph. That is, they are a 1:1 mapping of the underlying CANDEL schema. However, there are some blocks that represent more complex relationships. For instance, the age block below is a complex relationship (age is actually a direct property of clinical-observation, not subject). The marker ⨷ is used to distinguish complex blocks.
+
+
+[[file:Screen_Shot_2019-11-03_at_5.57.05_PM.png]]
+
+
+
+** Visualization blocks
+
+Once a query has returned a table of data, that data can be piped into a visualization. For instance, in this structure:
+
+
+[[file:Screen_Shot_2021-04-28_at_8.18.03_PM.png]]
+
+the toplevel block is a graph block that takes as its =data= input a query  (in this case, "subject where sample is..."). The other block attributes, =mark= and =encodings=, specify how to draw the graph. Most of the interesting stuff is in the =encodings= input, which contains a set of blocks, each of which maps a visual property to a data column or aggregate. In this case, a dot (point) graph is specified, the x coordinate is mapped to the timepoint cycle column of the results, the y coordinate to the subject column, and the size to the count of the result rows (sliced by the other encoding dimensions). 
+
+The result looks like this:
+
+
+[[file:Screen_Shot_2021-04-28_at_8.23.02_PM.png]]
+
+It's easy to change the encodings and other . Visualization blocks have their own section of the toolbox at the left of the screen.
+
+Enflame use [[https://vega.github.io/vega-lite/][Vega Lite]], a high-level declarative visualization engine to generate visualizations. Vega Lite is similar in its level of abstraction to ggplot, and tries to choose good parameters for visualization given minimal information. You should look at the Vega Lite documentation for details on how the language elements are interpreted. You can see the Vega Lite specification that enflame generates by "Open in Vega Editor" option in the three-dot menu next to the visualization.
+
+Enflame only exposes part of Vega Lite's API; if you want to use other parts of it, you can edit the Vega spec or make a request to the developer.a
+
+
+
+** Relation to Schema
+
+The CANDEL schema can be visualized as a graph where nodes are entity types and edges are the defined attributes that connect them. There's an [[http://enflame.parkerici.org/alzabo/schema/1.0.0/index.html][interactive schema browser]] available.
+
+Any block query can be mapped to a subset of the schema diagram. For instance, this query (samples of all subjects with disease prostate cancer)
+
+
+[[file:Screen_Shot_2019-11-03_at_5.18.01_PM.png]]
+
+
+Is specifying entities and attributes from the section of the graph highlighted in green:
+
+[[file:alzabo-highlighted.png]]
+
+
+
+
+
+
+
+
+
+
+* Implementation Notes
+Enflame makes use of the [[https://developers.google.com/blockly/][Blockly library]] from Google which is inspired by [[https://scratch.mit.edu/][Scratch]].

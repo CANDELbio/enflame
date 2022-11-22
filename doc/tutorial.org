@@ -1,0 +1,117 @@
+# -*- compile-command: "cd ..;bin/build-guide-pandoc.sh"  ; after-save-hook: (recompile) -*-
+
+#+TITLE: Enflame Tutorial
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/icon?family=Material+Icons" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../enflame.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../enflame-guide.css" />
+#+HTML_CONTAINER: container
+
+
+* Introduction
+
+[[http://enflame.parkerici.org/index.html][Enflame]] is a visual query builder for CANDEL. You can construct a query by combining blocks. You can then run the query against a selected CANDEL database, or you can take the generated text representation of it (in both Clojure and R ([[https://candel.parkerici.org/docs/using_candel/querying.html][Wick]]) formats) and include them in your own code. Enflame also includes the ability to do some simple data visualization on the returned data, also by using blocks and block structure (see [[Visualization blocks]]).
+
+[[https://candel.parkerici.org/][CANDEL]] is a graph database containing roughly 35 different /types/ of /entity/ (or object). Eg types include =gene=, =subject=, and =sample= .  An interactive version of [[http://enflame.parkerici.org/alzabo/schema/1.0.0/index.html][the complete schema]] is available. Queries specify a type and some constraints on that type, which might involve relationships with other entities.
+
+When building a query, you select blocks that represent the type of object you are interested in, and other blocks that represent attribiutes of those objects, or relationships to other objects. To start with a simple example, here' a query that will find all the =subject= objects with race =african-american=:
+
+#+BEGIN_EXPORT html
+<iframe class="embedi" src="/embed?ddb=pici0002-ph2-29&query=PHhtbCB4bWxucz0iaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYmxvY2tseS94bWwiPjxibG9jayB0eXBlPSJzdWJqZWN0X3F1ZXJ5IiBpZD0iT214MTE1NzQjaTsteU9rU3tDWGMiIHg9Ii0zIiB5PSIyMCI%2BPGZpZWxkIG5hbWU9Im91dHB1dCI%2BcHVsbDwvZmllbGQ%2BPHN0YXRlbWVudCBuYW1lPSJjb25zdHJhaW50Ij48YmxvY2sgdHlwZT0ic3ViamVjdF9yYWNlIiBpZD0iK2VkMVlyWXtdaE1sQlYrUTsqR1UiPjxmaWVsZCBuYW1lPSJWIj5hZnJpY2FuLWFtZXJpY2FuPC9maWVsZD48L2Jsb2NrPjwvc3RhdGVtZW50PjwvYmxvY2s%2BPC94bWw%2B"></iframe>
+#+END_EXPORT
+
+Click the [[file:Screen_Shot_2021-05-14_at_12.04.21_PM.png]]  button to run the query, and observe the results.
+
+Next, try changing the query. Here are some things you can try:
+- Pick a different value, say =white=, for the =race= field.
+- Change the output selector (=everything=) to =name= and see what happens.
+- Change the output selector to =count= and see what happens. Then try with different values for =race=, especially =any=.
+- Drag the =race= block from the query and see what happens (note: if the  [[file:Screen_Shot_2021-05-14_at_12.04.21_PM.png]] button isn't working, you might need to reselect the query block by clicking on it).
+
+** Example 2
+
+Here's a slightly more complex query. Again we are searching for subjects, but now we have multiple constraints on the attributes. The query starts off with two constraints...try running it.
+
+#+BEGIN_EXPORT html
+<iframe class="embedi" src="/embed?ddb=pici0002-ph2-29&query=PHhtbCB4bWxucz0iaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYmxvY2tseS94bWwiPjxibG9jayB0eXBlPSJzdWJqZWN0X3F1ZXJ5IiBpZD0iT214MTE1NzQjaTsteU9rU3tDWGMiIHg9Ii0zIiB5PSIyMCI%2BPGZpZWxkIG5hbWU9Im91dHB1dCI%2BcHVsbDwvZmllbGQ%2BPHN0YXRlbWVudCBuYW1lPSJjb25zdHJhaW50Ij48YmxvY2sgdHlwZT0ic3ViamVjdF9hZ2UiIGlkPSIwYWAvUy9FWDM3QSkwRlFoKGxrdSI%2BPGZpZWxkIG5hbWU9ImNvbXAiPiZndDs8L2ZpZWxkPjxmaWVsZCBuYW1lPSJWIj43MDwvZmllbGQ%2BPG5leHQ%2BPGJsb2NrIHR5cGU9InN1YmplY3Rfc2V4IiBpZD0iOEZ7MmJPJF9zQW9ZW3F0RSxJMTgiPjxmaWVsZCBuYW1lPSJWIj5mZW1hbGU8L2ZpZWxkPjwvYmxvY2s%2BPC9uZXh0PjwvYmxvY2s%2BPC9zdGF0ZW1lbnQ%2BPC9ibG9jaz48YmxvY2sgdHlwZT0ic3ViamVjdF9yYWNlIiBpZD0iK2VkMVlyWXtdaE1sQlYrUTsqR1UiIHg9Ijc0IiB5PSIxNTYiPjxmaWVsZCBuYW1lPSJWIj5hc2lhbjwvZmllbGQ%2BPC9ibG9jaz48L3htbD4%3D"></iframe>
+#+END_EXPORT
+
+Note that there is a third, unconnected attribute block [[file:Screen_Shot_2021-05-15_at_11.57.09_AM.png]]  lying around. It doesn't have any effect until you add it to the query – try doing that by dragging in under the ... block and running the query again.
+
+TODO would read better if extra was [sex female].
+
+
+** Example 3
+
+So far we've only queried subjects, but the real value of CANDEL is in how entities are connected with each other. Here's another example of a subject query, but this one has some new blocks of a different color, The reddish-brown =samples where= block is represents the set of samples that is related to the set of subjects. Sometimes we call this a /subquery/.
+
+This query in its initial form says to include all the related samples in the results. The result table will be bigger than before since each row represents a sample as well as a subject. 
+
+TODO example has position problems
+
+# [subjects where [sample is [samples]] and [race is white]]
+#+BEGIN_EXPORT html
+<iframe class="embedi" src="/embed?ddb=pici0002-ph2-29&query=PHhtbCB4bWxucz0iaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYmxvY2tseS94bWwiPjxibG9jayB0eXBlPSJzdWJqZWN0X3F1ZXJ5IiBpZD0iT214MTE1NzQjaTsteU9rU3tDWGMiIHg9Ii0yNjMiIHk9IjEwIj48ZmllbGQgbmFtZT0ib3V0cHV0Ij5pbmNsdWRlPC9maWVsZD48c3RhdGVtZW50IG5hbWU9ImNvbnN0cmFpbnQiPjxibG9jayB0eXBlPSJzdWJqZWN0X3NhbXBsZSIgaWQ9IkgreEkrOVZnTEZNXiksKWE%2FVkAxIj48dmFsdWUgbmFtZT0iViI%2BPGJsb2NrIHR5cGU9InNhbXBsZV9xdWVyeSIgaWQ9IjVVdTdLR3swU0VzLFhKVCozfCwwIj48ZmllbGQgbmFtZT0ib3V0cHV0Ij5wdWxsPC9maWVsZD48L2Jsb2NrPjwvdmFsdWU%2BPG5leHQ%2BPGJsb2NrIHR5cGU9InN1YmplY3RfcmFjZSIgaWQ9IitlZDFZcll7XWhNbEJWK1E7KkdVIj48ZmllbGQgbmFtZT0iViI%2Bd2hpdGU8L2ZpZWxkPjwvYmxvY2s%2BPC9uZXh0PjwvYmxvY2s%2BPC9zdGF0ZW1lbnQ%2BPC9ibG9jaz48YmxvY2sgdHlwZT0ic2FtcGxlX3NwZWNpbWVuIiBpZD0iZyMxc3xjQURJUFd7I0dVdTIje3IiIHg9Ii00MyIgeT0iMTM0Ij48ZmllbGQgbmFtZT0iViI%2BZmZwZTwvZmllbGQ%2BPC9ibG9jaz48L3htbD4%3D"></iframe>
+#+END_EXPORT
+
+Now try constraining the subquery by dragging the [[file:Screen_Shot_2021-05-12_at_4.55.29_PM.png]] block into the sample query block and running the query again.
+
+** Example 4
+
+This query produces a list of variants of a particular gene. The gene is specified by the [[file:Screen_Shot_2021-05-17_at_9.28.28_AM.png]] subquery; note that its output is set to =omit= since it always returns the same results, namely the single gene =EGFR=. 
+
+TODO this should be output everything probably,
+
+# [variants where gene is EGFR]
+#+BEGIN_EXPORT html
+<iframe  class="embedi" src="/embed?ddb=pici0002-ph2-29&query=PHhtbCB4bWxucz0iaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYmxvY2tseS94bWwiPjxibG9jayB0eXBlPSJ2YXJpYW50X3F1ZXJ5IiBpZD0iR1dqdippWko5dmdRWik0aHN1a3IiIHg9IjE2IiB5PSIxMiI%2BPGZpZWxkIG5hbWU9Im91dHB1dCI%2BaW5jbHVkZTwvZmllbGQ%2BPHN0YXRlbWVudCBuYW1lPSJjb25zdHJhaW50Ij48YmxvY2sgdHlwZT0idmFyaWFudF9nZW5lIiBpZD0iLno6LihaVGpvYSFTJDJDMjYwakEiPjx2YWx1ZSBuYW1lPSJWIj48YmxvY2sgdHlwZT0iZ2VuZV9xdWVyeSIgaWQ9InNreytXU3xuTHtiZ0ZbWEhOQT1sIj48ZmllbGQgbmFtZT0ib3V0cHV0Ij5vbWl0PC9maWVsZD48c3RhdGVtZW50IG5hbWU9ImNvbnN0cmFpbnQiPjxibG9jayB0eXBlPSJnZW5lX2hnbmMtc3ltYm9sIiBpZD0iVzcqdnRzck5wRy5ecnZCRF16OE0iPjxmaWVsZCBuYW1lPSJjb21wIj5pczwvZmllbGQ%2BPGZpZWxkIG5hbWU9IlYiPkVHRlI8L2ZpZWxkPjwvYmxvY2s%2BPC9zdGF0ZW1lbnQ%2BPC9ibG9jaz48L3ZhbHVlPjwvYmxvY2s%2BPC9zdGF0ZW1lbnQ%2BPC9ibG9jaz48L3htbD4%3D"></iframe>
+#+END_EXPORT
+
+You can try substituting a different gene name.
+
+** Example 5
+
+This example shows how you can produce row-specific counts. This query finds all subjects together with linked diseases, and produces a per-disease count.
+
+
+# Subjects with disease (counts
+#+BEGIN_EXPORT html
+<iframe  class="embedi" src="/embed?ddb=test-db-pici-prod&query=PHhtbCB4bWxucz0iaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYmxvY2tseS94bWwiPjxibG9jayB0eXBlPSJzdWJqZWN0X3F1ZXJ5IiBpZD0iJCtJVzMhVzpETGBee2dSc2xCc0AiIHg9IjgiIHk9IjEzIj48ZmllbGQgbmFtZT0ib3V0cHV0Ij5jb3VudDwvZmllbGQ%2BPHN0YXRlbWVudCBuYW1lPSJjb25zdHJhaW50Ij48YmxvY2sgdHlwZT0ic3ViamVjdF9tZWRkcmEtZGlzZWFzZSIgaWQ9Il9zfW49MmY0O0tvNEclYWphRXpOIj48dmFsdWUgbmFtZT0iViI%2BPGJsb2NrIHR5cGU9Im1lZGRyYS1kaXNlYXNlX3F1ZXJ5IiBpZD0iL3lLNTMoVn4oI1AkRDljUW5uTnAiPjxmaWVsZCBuYW1lPSJvdXRwdXQiPmluY2x1ZGU8L2ZpZWxkPjwvYmxvY2s%2BPC92YWx1ZT48L2Jsb2NrPjwvc3RhdGVtZW50PjwvYmxvY2s%2BPGJsb2NrIHR5cGU9Im1lZGRyYS1kaXNlYXNlX3ByZWZlcnJlZC1uYW1lIiBpZD0iSCUzYS5ga3ZOZE50YW9GKWJKbGsiIHg9IjkyIiB5PSIxODAiPjxmaWVsZCBuYW1lPSJjb21wIj5jb250YWluczwvZmllbGQ%2BPGZpZWxkIG5hbWU9IlYiPm1lbGFub21hPC9maWVsZD48L2Jsb2NrPjwveG1sPg%3D%3D"></iframe>
+#+END_EXPORT
+
+Try adding the [[file:Screen_Shot_2021-05-17_at_9.41.13_AM.png]] block to constrain diseases based on a substring of the disease name.
+
+** Example 6
+
+Here's a more complex example. This query returns subjects that have a variant in the =EGFR= gene.
+
+
+# subjects where variant is variants where gene is EGFR
+#+BEGIN_EXPORT html
+<iframe  class="embedi" src="/embed?ddb=test-db-pici-prod&query=PHhtbCB4bWxucz0iaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYmxvY2tseS94bWwiPjxibG9jayB0eXBlPSJzdWJqZWN0X3F1ZXJ5IiBpZD0iJCtJVzMhVzpETGBee2dSc2xCc0AiIHg9IjgiIHk9IjEzIj48ZmllbGQgbmFtZT0ib3V0cHV0Ij5pbmNsdWRlPC9maWVsZD48c3RhdGVtZW50IG5hbWU9ImNvbnN0cmFpbnQiPjxibG9jayB0eXBlPSJzdWJqZWN0X3ZhcmlhbnQiIGlkPSJiNk9aaUAqTFtSNGBZZCRpTSR%2BZCI%2BPHZhbHVlIG5hbWU9IlYiPjxibG9jayB0eXBlPSJ2YXJpYW50X3F1ZXJ5IiBpZD0iQTs1KDhXbXJgRU9hdzMlUX56WUsiPjxmaWVsZCBuYW1lPSJvdXRwdXQiPmluY2x1ZGU8L2ZpZWxkPjxzdGF0ZW1lbnQgbmFtZT0iY29uc3RyYWludCI%2BPGJsb2NrIHR5cGU9InZhcmlhbnRfZ2VuZSIgaWQ9Imo%2FRWB%2BYT9sel5GR1J%2BZVZgSlpNIj48dmFsdWUgbmFtZT0iViI%2BPGJsb2NrIHR5cGU9ImdlbmVfcXVlcnkiIGlkPSIvLD9jJX5sLy8wcmdaVGNuWyNMfSI%2BPGZpZWxkIG5hbWU9Im91dHB1dCI%2Bb21pdDwvZmllbGQ%2BPHN0YXRlbWVudCBuYW1lPSJjb25zdHJhaW50Ij48YmxvY2sgdHlwZT0iZ2VuZV9oZ25jLXN5bWJvbCIgaWQ9Inp%2BYi01dyRCKEZwWUFRVSlzWDgrIj48ZmllbGQgbmFtZT0iY29tcCI%2BY29udGFpbnM8L2ZpZWxkPjxmaWVsZCBuYW1lPSJWIj5FR0ZSPC9maWVsZD48L2Jsb2NrPjwvc3RhdGVtZW50PjwvYmxvY2s%2BPC92YWx1ZT48L2Jsb2NrPjwvc3RhdGVtZW50PjwvYmxvY2s%2BPC92YWx1ZT48L2Jsb2NrPjwvc3RhdGVtZW50PjwvYmxvY2s%2BPC94bWw%2B"></iframe>
+#+END_EXPORT
+
+Try changing the gene, or experimenting with the outputs. 
+
+
+** Example 7 - Visualization
+
+Enflame can not only generate queries, but generate data visualizations of the results. Here's an example which summarizes the counts of clinical observations. 
+
+#+BEGIN_EXPORT html
+<iframe  class="embedi" src="/embed?ddb=pici0002-ph2-28&rows=2000&view=graph&query=PHhtbCB4bWxucz0iaHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vYmxvY2tseS94bWwiPjxibG9jayB0eXBlPSJsYXllciIgaWQ9IktHVmRyZSpCNiw6X1YtTjtQZ05kIiB4PSIwIiB5PSIyOCI%2BPGZpZWxkIG5hbWU9Im1hcmsiPmJhcjwvZmllbGQ%2BPHN0YXRlbWVudCBuYW1lPSJlbmNvZGluZyI%2BPGJsb2NrIHR5cGU9ImVuY29kaW5nIiBpZD0iZ3plO0J1PS0sdlBnKFpYU2hbLiEiPjxmaWVsZCBuYW1lPSJhdHRyaWJ1dGUiPng8L2ZpZWxkPjxmaWVsZCBuYW1lPSJmaWVsZCI%2BdHJlYXRtZW50LXJlZ2ltZW48L2ZpZWxkPjxmaWVsZCBuYW1lPSJ0eXBlIj5ub21pbmFsPC9maWVsZD48bmV4dD48YmxvY2sgdHlwZT0iY291bnRfZW5jb2RpbmciIGlkPSJEY0o4Q21VUW5LRkhYMXZDYy9SaCI%2BPGZpZWxkIG5hbWU9ImF0dHJpYnV0ZSI%2BeTwvZmllbGQ%2BPG5leHQ%2BPGJsb2NrIHR5cGU9ImVuY29kaW5nIiBpZD0ieXk%2FeHIxeTkyWFBHOVAvdVZSa0oiPjxmaWVsZCBuYW1lPSJhdHRyaWJ1dGUiPmNvbG9yPC9maWVsZD48ZmllbGQgbmFtZT0iZmllbGQiPnR5cGU8L2ZpZWxkPjxmaWVsZCBuYW1lPSJ0eXBlIj5ub21pbmFsPC9maWVsZD48L2Jsb2NrPjwvbmV4dD48L2Jsb2NrPjwvbmV4dD48L2Jsb2NrPjwvc3RhdGVtZW50Pjx2YWx1ZSBuYW1lPSJkYXRhIj48YmxvY2sgdHlwZT0iY2xpbmljYWwtb2JzZXJ2YXRpb25fcXVlcnkiIGlkPSIsUT1OXnQjKHpYOk0vSn1mK29NLSI%2BPGZpZWxkIG5hbWU9Im91dHB1dCI%2BaW5jbHVkZTwvZmllbGQ%2BPHN0YXRlbWVudCBuYW1lPSJjb25zdHJhaW50Ij48YmxvY2sgdHlwZT0iY2xpbmljYWwtb2JzZXJ2YXRpb25fdGltZXBvaW50IiBpZD0iTXp5WEpsWnFwMlBJLigvYC5VRjIiPjx2YWx1ZSBuYW1lPSJWIj48YmxvY2sgdHlwZT0idGltZXBvaW50X3F1ZXJ5IiBpZD0iRXhNYHR6bG02Py9GI2dnUCk2LiwiPjxmaWVsZCBuYW1lPSJvdXRwdXQiPnB1bGw8L2ZpZWxkPjwvYmxvY2s%2BPC92YWx1ZT48L2Jsb2NrPjwvc3RhdGVtZW50PjwvYmxvY2s%2BPC92YWx1ZT48L2Jsb2NrPjwveG1sPg%3D%3D"></iframe>
+#+END_EXPORT
+
+
+The outermost red block specifies a visualization (in this case, a bar chart), and its inputs include the query itself ( [[file:Screen_Shot_2021-05-19_at_11.38.51_AM.png]] and contained blocks), while the blue attribute blocks specify the details of the visualization in termps of mapping data columns to visual attributes.
+
+- [[file:Screen_Shot_2021-05-19_at_11.40.57_AM.png]] specfies that the =x= dimenstion is mapped to treatement regimens. Since this is a non-numeric field, the mapping specifies type =nominal=.
+- [[file:Screen_Shot_2021-05-19_at_11.43.30_AM.png]] specifies that the height of the bars (=y= dimension) is mapped to the count of records (sliced by the other attributes). Since this is an aggregate, it doesn't specify a column.
+- [[file:Screen_Shot_2021-05-19_at_11.50.12_AM.png]]  specifies that the =color= is mapped onto the observation type field, producing a stacked bar chart.
+
+Try playing around with changing the attribute mappings, or removing some of them. For instance, here's an alternative way to visualize the same data as a dot graph:
+
+
+[[file:Screen_Shot_2021-05-19_at_11.48.43_AM.png]]
+
+

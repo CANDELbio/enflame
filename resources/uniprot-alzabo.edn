@@ -1,0 +1,659 @@
+{:title "UNIPROT",
+ :kinds
+ {:Organelle {:title "Organelle", :fields {}, :uri :uniprot/Organelle},
+  :Catalytic_Activity
+  {:doc "The catalytic activity of an enzyme.",
+   :title "Catalytic Activity",
+   :fields
+   {:catalyzedReaction
+    {:type :string,
+     :uri :uniprot/catalyzedReaction,
+     :attribute :uniprot/catalyzedReaction},
+    :enzymeClass
+    {:type :Enzyme,
+     :uri :uniprot/enzymeClass,
+     :attribute :uniprot/enzymeClass}},
+   :uri :uniprot/Catalytic_Activity},
+  :Proteome_Component
+  {:doc
+   "The component of a proteome. e.g. Chromosome, Contig or Plasmid",
+   :title "Proteome_Component",
+   :fields {},
+   :uri :uniprot/Proteome_Component},
+  :Not_Obsolete
+  {:doc
+   "A class introduced to group all records that are currently in the database.",
+   :title "Not Obsolete",
+   :fields {},
+   :uri :uniprot/Not_Obsolete},
+  :Taxon
+  {:doc "An element of a taxonomy for classifying life forms.",
+   :title "Taxon",
+   :fields
+   {:otherName
+    {:type :string,
+     :uri :uniprot/otherName,
+     :attribute :uniprot/otherName},
+    :scientificName
+    {:type :string,
+     :uri :uniprot/scientificName,
+     :attribute :uniprot/scientificName},
+    :rank
+    {:type :Rank,
+     :uri :uniprot/rank,
+     :attribute :uniprot/rank,
+     :doc "The rank of a taxon."},
+    :host {:type :Taxon, :uri :uniprot/host, :attribute :uniprot/host},
+    :synonym
+    {:type :string,
+     :uri :uniprot/synonym,
+     :attribute :uniprot/synonym},
+    :strain
+    {:type :Strain, :uri :uniprot/strain, :attribute :uniprot/strain},
+    :complete
+    {:type :boolean,
+     :uri :uniprot/complete,
+     :attribute :uniprot/complete},
+    :commonName
+    {:type :string,
+     :uri :uniprot/commonName,
+     :attribute :uniprot/commonName},
+    :partOfLineage
+    {:type :boolean,
+     :uri :uniprot/partOfLineage,
+     :attribute :uniprot/partOfLineage,
+     :doc
+     "True for taxa that can appear as part of an organism's non abbreviated lineage. In the flatfile and XML views of an UniProt entry (as well as at INSDC) only these taxonomic nodes are shown."}},
+   :uri :uniprot/Taxon},
+  :Participant
+  {:doc "A participant in a protein-protein interaction.",
+   :title "Interaction participant",
+   :fields {},
+   :uri :uniprot/Participant},
+  :Obsolete
+  {:doc
+   "The class of all obsolete records in the database (i.e. records that where once published but are now removed).",
+   :title "Obsolete",
+   :fields {},
+   :uri :uniprot/Obsolete},
+  :Protein_Existence
+  {:title "Protein existence evidence",
+   :fields {},
+   :uri :uniprot/Protein_Existence},
+  :Sequence
+  {:doc "An amino acid sequence.",
+   :title "Sequence",
+   :fields
+   {:mass
+    {:type :int,
+     :uri :uniprot/mass,
+     :attribute :uniprot/mass,
+     :doc "The predicted mass of a sequence in Daltons."},
+    :precursor
+    {:type :boolean,
+     :uri :uniprot/precursor,
+     :attribute :uniprot/precursor},
+    :translatedFrom
+    {:type :Nucleotide_Resource,
+     :uri :uniprot/translatedFrom,
+     :attribute :uniprot/translatedFrom},
+    :fragment
+    {:type :_e236e658c79333b7f7b0b10b43cb198c,
+     :uri :uniprot/fragment,
+     :attribute :uniprot/fragment,
+     :doc
+     "Indicates if a sequence is complete or consists of one or more fragments."},
+    :modification
+    {:type :Alternative_Sequence_Annotation,
+     :uri :uniprot/modification,
+     :attribute :uniprot/modification,
+     :doc "A modification of a sequence."},
+    :length
+    {:type :int, :uri :uniprot/length, :attribute :uniprot/length},
+    :sequenceFor
+    {:type :_cface5270133a0bde29d9d542d4d53a6,
+     :uri :uniprot/sequenceFor,
+     :attribute :uniprot/sequenceFor,
+     :doc "A resource that describes this sequence."},
+    :md5Checksum
+    {:type :string,
+     :uri :uniprot/md5Checksum,
+     :attribute :uniprot/md5Checksum},
+    :memberOf
+    {:type :Cluster,
+     :uri :uniprot/memberOf,
+     :attribute :uniprot/memberOf},
+    :basedOn
+    {:type :Simple_Sequence,
+     :uri :uniprot/basedOn,
+     :attribute :uniprot/basedOn,
+     :doc
+     "The sequence on which the description of a modified sequence is based."},
+    :seedFor
+    {:type :Cluster,
+     :uri :uniprot/seedFor,
+     :attribute :uniprot/seedFor}},
+   :uri :uniprot/Sequence},
+  :Enzyme_Regulation_Annotation
+  {:doc
+   "The use of this class has been replaced by Activity_Regulation_Annotation",
+   :title "Enzyme Regulation",
+   :fields {},
+   :uri :uniprot/Enzyme_Regulation_Annotation},
+  :Protein
+  {:doc "Description of a protein.",
+   :title "Protein",
+   :fields
+   {:isolatedFrom
+    {:type :Tissue,
+     :uri :uniprot/isolatedFrom,
+     :attribute :uniprot/isolatedFrom},
+    :classifiedWith
+    {:type :Concept,
+     :uri :uniprot/classifiedWith,
+     :attribute :uniprot/classifiedWith,
+     :doc "A concept that classifies this resource."},
+    :potentialSequence
+    {:type :Sequence,
+     :uri :uniprot/potentialSequence,
+     :attribute :uniprot/potentialSequence,
+     :doc
+     "This is a predicate added by an automated procedure to link entries/proteins that might be isoforms of each other."},
+    :existence
+    {:type :string,
+     :uri :uniprot/existence,
+     :attribute :uniprot/existence},
+    :chainSequenceMapping
+    {:type :string,
+     :uri :uniprot/chainSequenceMapping,
+     :attribute :uniprot/chainSequenceMapping,
+     :doc
+     "A mapping between a Sequence/Entry and aminoacids described in a PDB record."},
+    :interaction
+    {:type :Interaction,
+     :uri :uniprot/interaction,
+     :attribute :uniprot/interaction},
+    :oldMnemonic
+    {:type :string,
+     :uri :uniprot/oldMnemonic,
+     :attribute :uniprot/oldMnemonic,
+     :doc "A mnemonic that is no longer in use for this entry."},
+    :component
+    {:type :Part,
+     :uri :uniprot/component,
+     :attribute :uniprot/component,
+     :doc "A component of a protein."},
+    :nucleotideSequenceMappingIssue
+    {:type :Nucleotide_Resource,
+     :uri :uniprot/nucleotideSequenceMappingIssue,
+     :attribute :uniprot/nucleotideSequenceMappingIssue,
+     :doc
+     "When a CDS differs substantially from a reviewed UniProtKB/Swiss-Prot sequence, the UniProt curators indicate the nature of the difference in the corresponding cross-reference."},
+    :mappedCitation
+    {:type :Citation,
+     :uri :uniprot/mappedCitation,
+     :attribute :uniprot/mappedCitation,
+     :doc
+     "A publication from which data was by a extracted by a mapping from non UniProt origin, or which contains additional information."},
+    :domain
+    {:type :Part,
+     :uri :uniprot/domain,
+     :attribute :uniprot/domain,
+     :doc "A domain of a protein."},
+    :encodedBy
+    {:type :Gene,
+     :uri :uniprot/encodedBy,
+     :attribute :uniprot/encodedBy,
+     :doc "The gene by which a protein is encoded."},
+    :encodedIn
+    {:type :Subcellular_Location,
+     :uri :uniprot/encodedIn,
+     :attribute :uniprot/encodedIn,
+     :doc "The subcellular location where a protein is encoded."},
+    :annotation
+    {:type :Annotation,
+     :uri :uniprot/annotation,
+     :attribute :uniprot/annotation,
+     :doc "Attaches an annotation to a resource."}},
+   :uri :uniprot/Protein},
+  :Gene
+  {:title "Gene",
+   :fields
+   {:orfName
+    {:type :string,
+     :uri :uniprot/orfName,
+     :attribute :uniprot/orfName},
+    :locusName
+    {:type :string,
+     :uri :uniprot/locusName,
+     :attribute :uniprot/locusName}},
+   :uri :uniprot/Gene},
+  :Concept
+  {:doc "A concept used to classify resources.",
+   :title "Concept",
+   :fields {},
+   :uri :uniprot/Concept},
+  :Database
+  {:doc "Metadata for a life science database.",
+   :title "Database (description of)",
+   :fields
+   {:implicit
+    {:type :boolean,
+     :uri :uniprot/implicit,
+     :attribute :uniprot/implicit,
+     :doc "True if existance of this resource can be inferred."},
+    :abstract
+    {:type :boolean,
+     :uri :uniprot/abstract,
+     :attribute :uniprot/abstract,
+     :doc "True if the class does not have any direct instances."},
+    :category
+    {:type :string,
+     :uri :uniprot/category,
+     :attribute :uniprot/category},
+    :linkIsExplicit
+    {:type :boolean,
+     :uri :uniprot/linkIsExplicit,
+     :attribute :uniprot/linkIsExplicit,
+     :doc
+     "True if the Database is linked by an explicit action to UniProt, false if it is done using a simple hardcoded rule."},
+    :pattern
+    {:type :string,
+     :uri :uniprot/pattern,
+     :attribute :uniprot/pattern,
+     :doc
+     "A URL pattern, used to generate links by substituting an identifier."},
+    :curated
+    {:type :boolean,
+     :uri :uniprot/curated,
+     :attribute :uniprot/curated,
+     :doc
+     "If true the described database has some level of curation."},
+    :urlTemplate
+    {:type :string,
+     :uri :uniprot/urlTemplate,
+     :attribute :uniprot/urlTemplate,
+     :doc
+     "An string template that can be used to figure out from the database id what html page talks about it."},
+    :uriTemplate
+    {:type :string,
+     :uri :uniprot/uriTemplate,
+     :attribute :uniprot/uriTemplate,
+     :doc
+     "An string template that can be used to figure out from the database id what uri desribes it."}},
+   :uri :uniprot/Database},
+  :Structured_Name
+  {:doc
+   "A resource that holds a set of the known names for this protein together.",
+   :title "Structured_Name",
+   :fields
+   {:structuredNameType
+    {:type :string,
+     :uri :uniprot/structuredNameType,
+     :attribute :uniprot/structuredNameType,
+     :doc
+     "All names of the protein, from commonly used to obsolete, to used in the literature.."}},
+   :uri :uniprot/Structured_Name},
+  :Excluded_Proteome
+  {:doc
+   "A Proteome that has been excluded from UniProtKB for some reason, normally described by statements with the predicate up:exclusionReason",
+   :title "Excluded proteome",
+   :fields {},
+   :uri :uniprot/Excluded_Proteome},
+  :Attribution
+  {:doc
+   "Entity used to attach evidence or provenance to a rdf statement via reification.",
+   :title "Attribution",
+   :fields
+   {:manual
+    {:type :boolean, :uri :uniprot/manual, :attribute :uniprot/manual},
+    :source
+    {:type :string, :uri :uniprot/source, :attribute :uniprot/source}},
+   :uri :uniprot/Attribution},
+  :Pathway
+  {:doc "A hierarchical discription of a metabolic pathway.",
+   :title "Pathway",
+   :fields {},
+   :uri :uniprot/Pathway},
+  :Tissue
+  {:doc "A tissue such as lung or heart.",
+   :title "Tissue",
+   :fields {},
+   :uri :uniprot/Tissue},
+  :Citation
+  {:doc "Description of a publication from which data was obtained.",
+   :title "Citation",
+   :fields
+   {:institution
+    {:type :string,
+     :uri :uniprot/institution,
+     :attribute :uniprot/institution,
+     :doc "The institution at which a thesis was written."},
+    :group
+    {:type :string,
+     :uri :uniprot/group,
+     :attribute :uniprot/group,
+     :doc "The group or consortium that authored a publication."},
+    :publisher
+    {:type :string,
+     :uri :uniprot/publisher,
+     :attribute :uniprot/publisher,
+     :doc "The publisher of a book."},
+    :publishedIn
+    {:type :Journal,
+     :uri :uniprot/publishedIn,
+     :attribute :uniprot/publishedIn,
+     :doc
+     "Reserved predicate to link a citation to the Journal that it appeared in."},
+    :locator
+    {:type :string,
+     :uri :uniprot/locator,
+     :attribute :uniprot/locator},
+    :submittedTo
+    {:type :string,
+     :uri :uniprot/submittedTo,
+     :attribute :uniprot/submittedTo,
+     :doc "The database a resource  was submitted to."},
+    :title
+    {:type :string,
+     :uri :uniprot/title,
+     :attribute :uniprot/title,
+     :doc "The title of a publication."},
+    :author
+    {:type :string,
+     :uri :uniprot/author,
+     :attribute :uniprot/author,
+     :doc "The author of a publication."},
+    :erratum
+    {:type :Published_Citation,
+     :uri :uniprot/erratum,
+     :attribute :uniprot/erratum,
+     :doc "An erratum for a publication."},
+    :authorsIncomplete
+    {:type :boolean,
+     :uri :uniprot/authorsIncomplete,
+     :attribute :uniprot/authorsIncomplete},
+    :editor
+    {:type :string,
+     :uri :uniprot/editor,
+     :attribute :uniprot/editor,
+     :doc "The editor of a publication."},
+    :erratumFor
+    {:type :Published_Citation,
+     :uri :uniprot/erratumFor,
+     :attribute :uniprot/erratumFor,
+     :doc "The publication which an erratum refers to."}},
+   :uri :uniprot/Citation},
+  :Proteome
+  {:doc "Description of a proteome.",
+   :title "Proteome",
+   :fields
+   {:panproteome
+    {:type :Proteome,
+     :uri :uniprot/panproteome,
+     :attribute :uniprot/panproteome,
+     :doc
+     "The current pan proteome sequences are derived from the reference proteome\nclusters (75% proteome similarity for Fungus and 55% proteome similarity for\nArchaea and Bacteria). A reference proteome cluster is also known as a\nrepresentative proteome group (RPG) (Chen et al., 2011). A RPG contains similar\nproteomes calculated based on their co-membership in UniRef50 clusters. For each\nnon-singleton reference proteome cluster, a pan proteome is a set of sequences\nconsisting of all the sequences in the reference proteome, plus the addition of\nunique protein sequences that are found in other species or strains of the\ncluster but not in the reference proteome. These additional sequences are\nidentified using UniRef50 membership."},
+    :exclusionReason
+    {:type :string,
+     :uri :uniprot/exclusionReason,
+     :attribute :uniprot/exclusionReason,
+     :doc
+     "Indicates why the proteins of an Proteome where excluded from UniProtKB."}},
+   :uri :uniprot/Proteome},
+  :Interaction
+  {:doc "Description of a protein-protein interaction.",
+   :title "Interaction",
+   :fields
+   {:participant
+    {:type :Participant,
+     :uri :uniprot/participant,
+     :attribute :uniprot/participant,
+     :doc
+     "A protein that participates in a protein-protein interaction."},
+    :xeno
+    {:type :boolean, :uri :uniprot/xeno, :attribute :uniprot/xeno},
+    :negative
+    {:type :boolean,
+     :uri :uniprot/negative,
+     :attribute :uniprot/negative},
+    :experiments
+    {:type :int,
+     :uri :uniprot/experiments,
+     :attribute :uniprot/experiments}},
+   :uri :uniprot/Interaction},
+  :Strain
+  {:doc "A strain of a species.",
+   :title "Strain",
+   :fields {},
+   :uri :uniprot/Strain},
+  :Disease {:title "Disease", :fields {}, :uri :uniprot/Disease},
+  :Reviewed
+  {:doc
+   " The class of all reviewed records in the database (i.e. records that where looked at by a curator for integration into the database).",
+   :title "Reviewed",
+   :fields
+   {:nucleotideSequenceMappingIssue
+    {:type :Nucleotide_Resource,
+     :uri :uniprot/nucleotideSequenceMappingIssue,
+     :attribute :uniprot/nucleotideSequenceMappingIssue,
+     :doc
+     "When a CDS differs substantially from a reviewed UniProtKB/Swiss-Prot sequence, the UniProt curators indicate the nature of the difference in the corresponding cross-reference."}},
+   :uri :uniprot/Reviewed},
+  :Rank
+  {:doc "A rank of a taxon.",
+   :title "Taxon rank",
+   :fields {},
+   :uri :uniprot/Rank},
+  :Cluster
+  {:doc "Cluster of proteins with similar sequences.",
+   :title "Cluster (UniRef)",
+   :fields
+   {:member
+    {:type :Sequence,
+     :uri :uniprot/member,
+     :attribute :uniprot/member,
+     :doc "One of several similar resources."},
+    :someMembersClassifiedWith
+    {:type :_8cb1885ea52378ca17784343e66f9edf,
+     :uri :uniprot/someMembersClassifiedWith,
+     :attribute :uniprot/someMembersClassifiedWith,
+     :doc
+     "Indicates which GO terms are somewhat consistently used to annotate UniProtKB members of this cluster."},
+    :identity
+    {:type :_3b833095004c50f60e1e354c936acbb6,
+     :uri :uniprot/identity,
+     :attribute :uniprot/identity,
+     :doc "The level of sequence identity in a cluster."},
+    :commonTaxon
+    {:type :Taxon,
+     :uri :uniprot/commonTaxon,
+     :attribute :uniprot/commonTaxon}},
+   :uri :uniprot/Cluster},
+  :Molecule
+  {:doc "A biological molecule.",
+   :title "Molecule",
+   :fields {},
+   :uri :uniprot/Molecule},
+  :Resource
+  {:doc "A life science resource.",
+   :title "Resource",
+   :fields
+   {:locatedOn
+    {:type :Molecule,
+     :uri :uniprot/locatedOn,
+     :attribute :uniprot/locatedOn,
+     :doc "The molecule a this resource is located on."},
+    :transcribedFrom
+    {:type :string,
+     :uri :uniprot/transcribedFrom,
+     :attribute :uniprot/transcribedFrom},
+    :sequenceDiscrepancy
+    {:type :string,
+     :uri :uniprot/sequenceDiscrepancy,
+     :attribute :uniprot/sequenceDiscrepancy,
+     :doc
+     "Used when a CoDing Sequences (CDS) from the INSDC differs substantially from a reviewed UniProtKB/Swiss-Prot sequence, the UniProt curators indicate the nature of the difference as a rdfs:comment linked via this predicate."},
+    :database
+    {:type :Database,
+     :uri :uniprot/database,
+     :attribute :uniprot/database},
+    :translatedTo
+    {:type :string,
+     :uri :uniprot/translatedTo,
+     :attribute :uniprot/translatedTo},
+    :resolution
+    {:type :float,
+     :uri :uniprot/resolution,
+     :attribute :uniprot/resolution,
+     :doc "The resolution of an experiment, in Angstrom."},
+    :signatureSequenceMatch
+    {:type :string,
+     :uri :uniprot/signatureSequenceMatch,
+     :attribute :uniprot/signatureSequenceMatch,
+     :doc
+     "Indicates that the signature described by the subject resource matches mathematically and that that match is described by the object of a triple using this property as predicate."}},
+   :uri :uniprot/Resource},
+  :Method
+  {:doc "An experimental method.",
+   :title "Method",
+   :fields {},
+   :uri :uniprot/Method},
+  :Enzyme
+  {:doc
+   "A specific catalytic activity, defined by the Enzyme Commission of the Nomenclature Committee of the International Union of Biochemistry and Molecular Biology (IUBMB).",
+   :title "Enzyme",
+   :fields
+   {:activity
+    {:type :Catalytic_Activity,
+     :uri :uniprot/activity,
+     :attribute :uniprot/activity,
+     :doc "The catalytic activity of an enzyme."},
+    :cofactorLabel
+    {:type :string,
+     :uri :uniprot/cofactorLabel,
+     :attribute :uniprot/cofactorLabel,
+     :doc "A cofactor required for a catalytic activity."}},
+   :uri :uniprot/Enzyme},
+  :Subcellular_Location
+  {:title "Subcellular Location",
+   :fields
+   {:relatedLocation
+    {:type :Subcellular_Location,
+     :uri :uniprot/relatedLocation,
+     :attribute :uniprot/relatedLocation}},
+   :uri :uniprot/Subcellular_Location},
+  :Plasmid
+  {:doc "Description of a Plasmid",
+   :title "Plasmid",
+   :fields {},
+   :uri :uniprot/Plasmid},
+  :Transposon
+  {:doc "A transposon",
+   :title "Transposon",
+   :fields {},
+   :uri :uniprot/Transposon},
+  :Statement
+  {:fields
+   {:context
+    {:type :string,
+     :uri :uniprot/context,
+     :attribute :uniprot/context},
+    :scope
+    {:type :string,
+     :uri :uniprot/scope,
+     :attribute :uniprot/scope,
+     :doc
+     "The extent of the work carried out by the authors of a publication."},
+    :chain
+    {:type :string,
+     :uri :uniprot/chain,
+     :attribute :uniprot/chain,
+     :doc
+     "Maps a series of symbols representing chains of a protein to a range of amino acids."}},
+   :uri :rdf/Statement},
+  :Journal
+  {:title "Journal",
+   :fields
+   {:shortCoden
+    {:type :string,
+     :uri :uniprot/shortCoden,
+     :attribute :uniprot/shortCoden,
+     :doc "Used to link a Journal to its shortCoden"}},
+   :uri :uniprot/Journal},
+  :Part
+  {:doc "Description of a part of a protein.",
+   :title "Protein part",
+   :fields {},
+   :uri :uniprot/Part},
+  :Annotation
+  {:doc "Description of a resource on a specific topic.",
+   :title "Annotation",
+   :fields
+   {:measuredActivity
+    {:type :string,
+     :uri :uniprot/measuredActivity,
+     :attribute :uniprot/measuredActivity,
+     :doc "The maximum velocity, Vmax."},
+    :maximum
+    {:type :float,
+     :uri :uniprot/maximum,
+     :attribute :uniprot/maximum,
+     :doc "A maximum value."},
+    :ligandPart
+    {:type :string,
+     :uri :uniprot/ligandPart,
+     :attribute :uniprot/ligandPart},
+    :cofactor
+    {:type :string,
+     :uri :uniprot/cofactor,
+     :attribute :uniprot/cofactor},
+    :ligand
+    {:type :string, :uri :uniprot/ligand, :attribute :uniprot/ligand},
+    :frameshift
+    {:type :boolean,
+     :uri :uniprot/frameshift,
+     :attribute :uniprot/frameshift,
+     :doc "True if a sequence modification causes a frameshift."},
+    :certain
+    {:type :boolean,
+     :uri :uniprot/certain,
+     :attribute :uniprot/certain,
+     :doc "False if there is any uncertainty about a statement."},
+    :catalyticActivity
+    {:type :Catalytic_Activity,
+     :uri :uniprot/catalyticActivity,
+     :attribute :uniprot/catalyticActivity},
+    :measuredError
+    {:type :float,
+     :uri :uniprot/measuredError,
+     :attribute :uniprot/measuredError,
+     :doc "The magnitude of the error of a value that was measured."},
+    :measuredAffinity
+    {:type :string,
+     :uri :uniprot/measuredAffinity,
+     :attribute :uniprot/measuredAffinity,
+     :doc "The Michaelis-Menten constant, Km."},
+    :disease
+    {:type :Disease,
+     :uri :uniprot/disease,
+     :attribute :uniprot/disease},
+    :locatedIn
+    {:type :_58cedf931b81a87fcf4885f1ee126ad6,
+     :uri :uniprot/locatedIn,
+     :attribute :uniprot/locatedIn},
+    :measuredValue
+    {:type :float,
+     :uri :uniprot/measuredValue,
+     :attribute :uniprot/measuredValue,
+     :doc "A value that was measured."},
+    :catalyzedPhysiologicalReaction
+    {:type :string,
+     :uri :uniprot/catalyzedPhysiologicalReaction,
+     :attribute :uniprot/catalyzedPhysiologicalReaction}},
+   :uri :uniprot/Annotation},
+  :Status
+  {:doc "Indicator for the reliability of a piece of information.",
+   :title "Status",
+   :fields {},
+   :uri :uniprot/Status}}}

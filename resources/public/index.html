@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Enflame query builder</title>
+    <meta charset='utf-8'>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons" >
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="enflame.css">
+  </head>
+  <body>
+    <div class="container mw-100 mh-100 h-100">
+      <div class="row" style="min-height:600px"> 
+	<div class="col-9">
+	  <div class="row" style="min-height:600px; width: 100%" > 
+	    <!-- css must die -->
+	    <div id="blocklyArea" style="min-height:650px; height:100%; min-width:100%; width: 100%;"></div>
+	  </div>
+	  <div class="row">
+	    <div id="results"></div>
+	  </div>
+	</div>
+	<div id="blocklyDiv" style="position: absolute;"></div>
+	<div class="col-3">
+	  <div id="app">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <script src="js/compiled/app.js"></script>
+  </body>
+  <script>org.parkerici.enflame.core.init();</script>
+</html>
+

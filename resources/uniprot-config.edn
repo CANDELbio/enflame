@@ -1,0 +1,13 @@
+{:source {:type :sparql
+          :sparql-endpoint "https://sparql.uniprot.org/"}
+ :schema "resources/uniprot-alzabo.edn" 
+ :query-generator :sparql-generate
+ :port 1992
+ :dev? true                             ;TODO control this somehow maybe aero/env
+ :rh-cards [:query
+            #_ :share
+            :compacted                  ;debug only
+            #_ :browser                    ;someday
+            ]
+
+ }
