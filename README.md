@@ -1,6 +1,6 @@
 # enflame
 
-A visual query interface for (CANDEL)[https://www.parkerici.org/research-project/candel-data-analysis-platform/] and other graph databases.
+A visual query interface for [CANDEL](https://www.parkerici.org/research-project/candel-data-analysis-platform/) and other graph databases.
 
 
 # Theory of operation
@@ -12,43 +12,34 @@ Enflame is started up with a configuration file that specifies (among other thin
 
 # Configuration
 
-See (sample config)[resources/candel-config.edn]
+See [sample config](resources/candel-config.edn)
 
 # Development Mode
 
 ## Requirements
 
-leiningen
-Some kind of data source
+- leiningen
+- A CANDEL endpoint or other data source
 
 
 ## To run locally from source:
 
-Copy resources/candel-config.edn to deploy/candel-config.edn, filling out as appropriate
+Copy `resources/candel-config.edn` to `deploy/candel-config.edn`, filling out as appropriate.
 
     lein launch
 
-Browser should open to  http://localhost:1991
+This will compile the front-end, lauch a server, and open a browser windoe.
 
-## Doc generation
+## Documentation generation
 
 Requirements: emacs and pandoc
 
 Run the script
 
-    bin/build-guide.sh
+    doc/build-guide.sh
 	
-This builds the guide in both HTML format (for serving) and Markdown (for https://github.com/ParkerICI/candel-website)
+This builds the guide and tutorial in HTML format.
 
-## To deploy by hand
-
-(1) Compile front and back end and build the Docker image:
-
-    bin/build.sh
-
-(2) Deploy
-
-    bin/deploy.sh	
 
 
 ## Library

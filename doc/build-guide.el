@@ -1,6 +1,8 @@
 (require 'org)
 (require 'ox-html)
 
+(setq org-export-with-broken-links 'mark)
+
 (setq org-publish-project-alist
   '(("guide"
      :base-directory "doc/"

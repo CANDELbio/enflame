@@ -14,7 +14,7 @@
 
 [[https://candel.parkerici.org/][CANDEL]] is a graph database containing roughly 35 different /types/ of /entity/ (or object). Eg types include =gene=, =subject=, and =sample= .  An interactive version of [[http://enflame.parkerici.org/alzabo/schema/1.0.0/index.html][the complete schema]] is available. Queries specify a type and some constraints on that type, which might involve relationships with other entities.
 
-An [[interactive tutorial][tutorial.html]] is available, with interactive examples showing how to compose queries.
+An [[file:tutorial.html][interactive tutorial]] is available, with interactive examples showing how to compose queries.
 
 
 * UI Overview
