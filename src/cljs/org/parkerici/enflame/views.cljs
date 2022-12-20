@@ -296,6 +296,8 @@
 (rf/reg-sub
  :query-invalid?
  (fn [_ _]
+   nil
+   #_                                   ;TODO CANDEL Specific
    (let [query @(rf/subscribe [:query])
          query-block @(rf/subscribe [:query-block])]
      (cond 
@@ -320,6 +322,7 @@
    :candel/wick candel/wick-card
    :query query-card
    :compact compact-card
+   :compacted compact-card              ;temp
    :xml xml-card
    :share library/share-card
    :browser obrowser/browser
@@ -337,6 +340,10 @@
     (toplink "Library" "/library")]
 
    [:div#accordian.accordian
-    (for [card (c/config :rh-cards)] ;; cards TODO   not working yet because timing
-      ^{:key card}[(get card-defs card)])
+    (for [card (c/config :rh-cards)
+          :let [cdef (get card-defs card)]]
+      (if cdef
+        ^{:key card}[cdef]
+        (throw (ex-info "No card defined for" {:card card}))
+        ))
     ]])

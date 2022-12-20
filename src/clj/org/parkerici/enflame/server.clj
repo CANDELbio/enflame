@@ -1,5 +1,6 @@
 (ns org.parkerici.enflame.server
   (:require [org.parkerici.enflame.datomic-relay :as datomic]
+            [org.parkerici.enflame.sparql :as sparql]
             [org.parkerici.enflame.download :as download]
             [org.parkerici.enflame.embed-server :as embed]
             [org.parkerici.enflame.admin :as admin]
@@ -36,6 +37,13 @@
       (catch Throwable e
         {:status 500 :headers {} :body {:error (print-str e)}}))))
 
+(defn do-query
+  [db query args candelabra-token config]
+  ;; TODO Multimethod?
+  (case (:type (:source config))
+    :candel (datomic/query db query args candelabra-token config)
+    :sparql (sparql/q (:sparql-endpoint (:source config)) query)))
+
 (defn handle-query
   [req config]
   (let [{:keys [query args limit db]} (:params req)
@@ -43,7 +51,7 @@
         _args (if (u/nullish? args) [] (read-string args))
         _limit (if (u/nullish? limit) nil (Integer. limit))
         candelabra-token (get-in req [:cookies "candelabra-token" :value])
-        results (datomic/query db _query _args candelabra-token config)
+        results (do-query db _query _args candelabra-token config)
         clipped (if _limit (take _limit results) results)]
     (response/response
      {:count (count results) :clipped (count clipped) :results clipped})))

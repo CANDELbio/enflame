@@ -16,6 +16,7 @@
 
 ;;; Handler gets spurious calls with 0 status and/or empty response, which we ignore. Not sure why that's happening
 ;;; Returns map with :count, :clipped, and :results
+;;; TODO move to non-datomic file
 (defn do-query
   [ddb query args limit handler & [options]]
   (api/ajax-get "/api/query"
@@ -33,6 +34,7 @@
 (rf/reg-event-db
  :get-idents
  (fn [db [_ ddb]]
+   #_                                   ;TODO CANDEL specific
    (let [ddb (or ddb (:ddb db))]
      (do-query ddb
                '{:find (?x ?y), :where ([?x :db/ident ?y])}
