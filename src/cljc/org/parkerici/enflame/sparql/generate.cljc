@@ -115,7 +115,7 @@
   [blockspec]
   #_ (reset-vars)
   (when blockspec
-    (let [{:keys [filter where select] :as built}
+    (let [{:keys [filter where find] :as built}
           (build-query {} (assoc blockspec :top? true))
           base `(:bgp ~@where)
           filtered (if-not (empty? filter)
@@ -123,7 +123,7 @@
                               ~base)
                      base)
           ;; TODO throwing away pulls, need to implement those some other way
-          vars (map #(if (seq? %) (second %) %) select)
+          vars (map #(if (seq? %) (second %) %) find)
           ]
       (reset! tap built)
       ;; TODO
@@ -149,14 +149,13 @@
         ;; Not rdf/type, its pull etc
         output-type (keyword (get-in blockspec [:children "output"])) ;oneof :include :pull :count etc.
         subqueries (map (partial build-query {:current-var output-var}) constraints)
-        subquery-selects (mapcat :select subqueries)
+        subquery-selects (mapcat :find subqueries)
         subquery-wheres (mapcat :where subqueries)
         type-where `[~output-var :rdf/type ~output-rdf-type]
         base-wheres (cons type-where subquery-wheres)
         subquery-filters (mapcat :filter subqueries)
         base-query
-        ;; Do not understand this
-        {:select (concat (select-terms output-var output-type)
+        {:find (concat (select-terms output-var output-type)
                          subquery-selects)
          :where (if-let [label-attribute
                          (and top?
@@ -169,13 +168,12 @@
          }]
     base-query))
 
-
 (defmethod build-query :query-text-field
   [{:keys [current-var] :as query} blockspec]
   (let [{:keys [attribute] :as blockdef} (spec-block-def blockspec)
         value (query-value blockspec blockdef "V") 
         var (?var (:attribute blockdef)) ;may not be used and uses up a number...
-        comp (query-value blockspec blockdef "comp")]
+        comp (keyword (query-value blockspec blockdef "comp"))]
     ;; would be better expressed with merge-recursive
     (-> query
         (update :where concat
@@ -187,7 +185,7 @@
                       [[current-var attribute var]])
                 )
         (update :filter concat
-                (when true ; -not (= comp :is)
+                (when-not (= comp :is)
                   (u/de-ns
                    `[(regex ~var ~(generate-regex comp value) "")])))
 

@@ -1,3 +1,5 @@
+;;; TODO added labels by hand, should do that as part of generation
+
 {:title "UNIPROT",
  :kinds
  {:Organelle {:title "Organelle", :fields {}, :uri :uniprot/Organelle},
@@ -5,7 +7,12 @@
   {:doc "The catalytic activity of an enzyme.",
    :title "Catalytic Activity",
    :fields
-   {:catalyzedReaction
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}
+    
+    :catalyzedReaction
     {:type :string,
      :uri :uniprot/catalyzedReaction,
      :attribute :uniprot/catalyzedReaction},
@@ -18,19 +25,28 @@
   {:doc
    "The component of a proteome. e.g. Chromosome, Contig or Plasmid",
    :title "Proteome_Component",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Proteome_Component},
   :Not_Obsolete
   {:doc
    "A class introduced to group all records that are currently in the database.",
    :title "Not Obsolete",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Not_Obsolete},
   :Taxon
   {:doc "An element of a taxonomy for classifying life forms.",
    :title "Taxon",
    :fields
-   {:otherName
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:otherName
     {:type :string,
      :uri :uniprot/otherName,
      :attribute :uniprot/otherName},
@@ -68,23 +84,35 @@
   :Participant
   {:doc "A participant in a protein-protein interaction.",
    :title "Interaction participant",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Participant},
   :Obsolete
   {:doc
    "The class of all obsolete records in the database (i.e. records that where once published but are now removed).",
    :title "Obsolete",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Obsolete},
   :Protein_Existence
   {:title "Protein existence evidence",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Protein_Existence},
   :Sequence
   {:doc "An amino acid sequence.",
    :title "Sequence",
    :fields
-   {:mass
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:mass
     {:type :int,
      :uri :uniprot/mass,
      :attribute :uniprot/mass,
@@ -138,13 +166,19 @@
   {:doc
    "The use of this class has been replaced by Activity_Regulation_Annotation",
    :title "Enzyme Regulation",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Enzyme_Regulation_Annotation},
   :Protein
   {:doc "Description of a protein.",
    :title "Protein",
    :fields
-   {:isolatedFrom
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:isolatedFrom
     {:type :Tissue,
      :uri :uniprot/isolatedFrom,
      :attribute :uniprot/isolatedFrom},
@@ -219,7 +253,10 @@
   :Gene
   {:title "Gene",
    :fields
-   {:orfName
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:orfName
     {:type :string,
      :uri :uniprot/orfName,
      :attribute :uniprot/orfName},
@@ -231,13 +268,19 @@
   :Concept
   {:doc "A concept used to classify resources.",
    :title "Concept",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Concept},
   :Database
   {:doc "Metadata for a life science database.",
    :title "Database (description of)",
    :fields
-   {:implicit
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:implicit
     {:type :boolean,
      :uri :uniprot/implicit,
      :attribute :uniprot/implicit,
@@ -287,7 +330,10 @@
    "A resource that holds a set of the known names for this protein together.",
    :title "Structured_Name",
    :fields
-   {:structuredNameType
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:structuredNameType
     {:type :string,
      :uri :uniprot/structuredNameType,
      :attribute :uniprot/structuredNameType,
@@ -298,14 +344,20 @@
   {:doc
    "A Proteome that has been excluded from UniProtKB for some reason, normally described by statements with the predicate up:exclusionReason",
    :title "Excluded proteome",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Excluded_Proteome},
   :Attribution
   {:doc
    "Entity used to attach evidence or provenance to a rdf statement via reification.",
    :title "Attribution",
    :fields
-   {:manual
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:manual
     {:type :boolean, :uri :uniprot/manual, :attribute :uniprot/manual},
     :source
     {:type :string, :uri :uniprot/source, :attribute :uniprot/source}},
@@ -313,18 +365,27 @@
   :Pathway
   {:doc "A hierarchical discription of a metabolic pathway.",
    :title "Pathway",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Pathway},
   :Tissue
   {:doc "A tissue such as lung or heart.",
    :title "Tissue",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Tissue},
   :Citation
   {:doc "Description of a publication from which data was obtained.",
    :title "Citation",
    :fields
-   {:institution
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:institution
     {:type :string,
      :uri :uniprot/institution,
      :attribute :uniprot/institution,
@@ -388,7 +449,10 @@
   {:doc "Description of a proteome.",
    :title "Proteome",
    :fields
-   {:panproteome
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:panproteome
     {:type :Proteome,
      :uri :uniprot/panproteome,
      :attribute :uniprot/panproteome,
@@ -405,7 +469,10 @@
   {:doc "Description of a protein-protein interaction.",
    :title "Interaction",
    :fields
-   {:participant
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:participant
     {:type :Participant,
      :uri :uniprot/participant,
      :attribute :uniprot/participant,
@@ -425,15 +492,24 @@
   :Strain
   {:doc "A strain of a species.",
    :title "Strain",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Strain},
-  :Disease {:title "Disease", :fields {}, :uri :uniprot/Disease},
+  :Disease {:title "Disease", :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}}, :uri :uniprot/Disease},
   :Reviewed
   {:doc
    " The class of all reviewed records in the database (i.e. records that where looked at by a curator for integration into the database).",
    :title "Reviewed",
    :fields
-   {:nucleotideSequenceMappingIssue
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:nucleotideSequenceMappingIssue
     {:type :Nucleotide_Resource,
      :uri :uniprot/nucleotideSequenceMappingIssue,
      :attribute :uniprot/nucleotideSequenceMappingIssue,
@@ -443,13 +519,19 @@
   :Rank
   {:doc "A rank of a taxon.",
    :title "Taxon rank",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Rank},
   :Cluster
   {:doc "Cluster of proteins with similar sequences.",
    :title "Cluster (UniRef)",
    :fields
-   {:member
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:member
     {:type :Sequence,
      :uri :uniprot/member,
      :attribute :uniprot/member,
@@ -473,13 +555,19 @@
   :Molecule
   {:doc "A biological molecule.",
    :title "Molecule",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Molecule},
   :Resource
   {:doc "A life science resource.",
    :title "Resource",
    :fields
-   {:locatedOn
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:locatedOn
     {:type :Molecule,
      :uri :uniprot/locatedOn,
      :attribute :uniprot/locatedOn,
@@ -517,14 +605,20 @@
   :Method
   {:doc "An experimental method.",
    :title "Method",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Method},
   :Enzyme
   {:doc
    "A specific catalytic activity, defined by the Enzyme Commission of the Nomenclature Committee of the International Union of Biochemistry and Molecular Biology (IUBMB).",
    :title "Enzyme",
    :fields
-   {:activity
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:activity
     {:type :Catalytic_Activity,
      :uri :uniprot/activity,
      :attribute :uniprot/activity,
@@ -538,7 +632,10 @@
   :Subcellular_Location
   {:title "Subcellular Location",
    :fields
-   {:relatedLocation
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:relatedLocation
     {:type :Subcellular_Location,
      :uri :uniprot/relatedLocation,
      :attribute :uniprot/relatedLocation}},
@@ -546,16 +643,25 @@
   :Plasmid
   {:doc "Description of a Plasmid",
    :title "Plasmid",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Plasmid},
   :Transposon
   {:doc "A transposon",
    :title "Transposon",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Transposon},
   :Statement
   {:fields
-   {:context
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:context
     {:type :string,
      :uri :uniprot/context,
      :attribute :uniprot/context},
@@ -575,7 +681,10 @@
   :Journal
   {:title "Journal",
    :fields
-   {:shortCoden
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:shortCoden
     {:type :string,
      :uri :uniprot/shortCoden,
      :attribute :uniprot/shortCoden,
@@ -584,13 +693,19 @@
   :Part
   {:doc "Description of a part of a protein.",
    :title "Protein part",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Part},
   :Annotation
   {:doc "Description of a resource on a specific topic.",
    :title "Annotation",
    :fields
-   {:measuredActivity
+   {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}:measuredActivity
     {:type :string,
      :uri :uniprot/measuredActivity,
      :attribute :uniprot/measuredActivity,
@@ -655,5 +770,8 @@
   :Status
   {:doc "Indicator for the reliability of a piece of information.",
    :title "Status",
-   :fields {},
+   :fields {:label
+    {:uri :rdfs/label
+     :attribute :rdfs/label
+     :type :string}},
    :uri :uniprot/Status}}}

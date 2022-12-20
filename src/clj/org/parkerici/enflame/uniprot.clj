@@ -170,13 +170,13 @@
  :uniprot/Rank
  :uniprot/Reviewed)
 
-(count (instances :uniprot/Pathway))
-3117
-(count (instances :uniprot/Disease))
-6202
-(count (instances :uniprot/Molecule))
-0  ;; uh uo
-
+(comment
+  (count (instances :uniprot/Pathway))
+  ; 3117
+  (count (instances :uniprot/Disease))
+  ; 6202 whoops now 0, wtf?
+  (count (instances :uniprot/Molecule))
+  )
 
 (defn describe
   [ent]
@@ -280,6 +280,7 @@
     (keyword (name key))
     key))
 
+;;; TODO add rdfs/label field
 ;;; TODO add skos etc fields
 (defn class-alzabo-fields
   [class]

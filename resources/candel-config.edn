@@ -12,7 +12,7 @@
             :query
             :candel/wick
             :share
-            :compacted                  ;debug only
+            :compact                  ;debug only
             :browser  
             ]
  :port 1991                             ;Port on which to serve application

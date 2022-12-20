@@ -123,8 +123,11 @@
  :query-results
  (fn [db [_ {:keys [results count clipped]}]]
    (let [idents @(rf/subscribe [:idents])
-         query-cols (:find @(rf/subscribe [:query]))
-         reshaped (results/reshape-results results idents query-cols)]
+         ;; CANDEL query-cols (:find @(rf/subscribe [:query]))
+         ;; assuming a certain form of query (:project <colk>...)
+         query-cols (second @(rf/subscribe [:query]))
+         ;; TODO CANDEL reshaping not working, better to use raw for now
+         reshaped results #_ (results/reshape-results results idents query-cols)]
      (-> db
          (assoc :status :finished
                 :results reshaped

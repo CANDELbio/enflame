@@ -296,7 +296,7 @@
 (rf/reg-sub
  :query-invalid?
  (fn [_ _]
-   nil
+  false
    #_                                   ;TODO CANDEL Specific
    (let [query @(rf/subscribe [:query])
          query-block @(rf/subscribe [:query-block])]
