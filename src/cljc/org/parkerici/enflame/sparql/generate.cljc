@@ -5,12 +5,27 @@
             [clojure.string :as str])
   )
 
-
+#_
+(schema/set-schema (org.parkerici.enflame.config/read-schema nil))
 
 
 ;;; Pasted from candel and should be folded
 
 (def varcounter (atom {}))
+
+;;; → Multitool
+(defn safe-name [thing]
+  (when #?(:clj (instance? clojure.lang.Named thing)
+           :cljs (.-name thing))
+    (name thing)))
+
+(defn s [thing]
+  (or (safe-name thing)
+      (str thing)))
+
+(defn symbol-conc
+  [& things]
+  (symbol (apply str (map s things))))
 
 (defn ?var [kind]
   (swap! varcounter update kind #(inc (or % 0)))
@@ -46,14 +61,16 @@
 
 ;;; From CANDEL, but modified
 
+#_
 (defn pull-include
   [var]
   (let [kind (var-kind var)
-        label (schema/kind-label kind)]
+        label (kind-label kind)]
     (if label
       [:db/id label]
       [:db/id])))
 
+#_
 (defn find-term
   [var type]
   (u/de-ns
@@ -65,6 +82,20 @@
      :count `(count-distinct ~var))))
 
 
+
+(defn label-var
+  [base-var]
+  (symbol-conc base-var "Label"))
+
+
+
+(defn select-terms
+  [var type]
+   (case (or type :include)             ;default is :include
+     :omit nil
+     :include (list var (label-var var))
+     :count `(count-distinct ~var)      ;TODO
+     ))
 
 ;;; Actual
 
@@ -104,6 +135,10 @@
       :type
       blockdefs/block-def))
 
+(defn kind-label
+  [kind]
+  :rdfs/label)
+
 (defmethod build-query :query-builder-query
   [{:keys [current-var] :as _query} {:keys [top?] :as blockspec}]
   (let [{:keys [output]} (spec-block-def blockspec)
@@ -117,18 +152,18 @@
         subquery-selects (mapcat :select subqueries)
         subquery-wheres (mapcat :where subqueries)
         type-where `[~output-var :rdf/type ~output-rdf-type]
+        base-wheres (cons type-where subquery-wheres)
         subquery-filters (mapcat :filter subqueries)
         base-query
         ;; Do not understand this
-        {:select (if-let [term (find-term output-var output-type)]
-                 (conj subquery-selects term)
-                 subquery-selects)
+        {:select (concat (select-terms output-var output-type)
+                         subquery-selects)
          :where (if-let [label-attribute
                          (and top?
                               (empty? subquery-wheres)
-                              (schema/kind-label output))]
-                  [[output-var label-attribute (?var label-attribute)]] ;TODO not sure about this
-                  (cons type-where subquery-wheres))
+                              (kind-label output))]
+                  (cons [output-var label-attribute (label-var output-var)] base-wheres)
+                  base-wheres)
          :filter subquery-filters
          :current-var output-var
          }]

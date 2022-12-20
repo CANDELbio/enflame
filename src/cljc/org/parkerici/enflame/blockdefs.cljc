@@ -223,7 +223,7 @@
 (defn kind-field-blockdef
   [kind field invert?]
   (let [{:keys [type attribute]} (if invert? ;??? not sure about this
-                                   {:type field :attribute (keyword field kind)}
+                                   {:type field :attribute (keyword (name field) (name kind))}
                                    (field-def kind field))]
     (when-let [field-def (field-def-type field type)]
       (merge
