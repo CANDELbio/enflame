@@ -83,8 +83,9 @@
 
 ;;; Searching for usable endpoints
 
-(def sparql-dbs (clojure.data.json/read-str (slurp "/Users/mtravers/Downloads/query (1).json")
-                                            :key-fn keyword))
+(def sparql-dbs
+  (clojure.data.json/read-str (slurp "scrap/sparql-endpoints.json")
+                              :key-fn keyword))
 
 
 (defn check-link

@@ -7,6 +7,19 @@
    [clojure.set :as set]
    )  )
 
+;;; TODO get from config
+(def endpoint "https://sparql.uniprot.org/")
+
+;;; → Multitool
+(defn curried-api
+  [namespace arg1]                      ;TODO should take arb # args
+  `(do
+     ~@(for [[s v] (ns-publics namespace)
+             :when (:api (meta v))]
+         `(def ~s ~(partial v arg1)))))
+
+(eval (curried-api 'org.parkerici.enflame.sparql endpoint))
+
 ;;; These are silly
 (reg/prefix 'uniprot "http://purl.uniprot.org/core/")
 (reg/prefix 'unipath "http://purl.uniprot.org/unipathway/")
