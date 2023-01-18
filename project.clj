@@ -31,7 +31,7 @@
                                com.fasterxml.jackson.core/jackson-core]]
                  [environ "1.1.0"]
                  [me.raynes/fs "1.4.6"]
-                 [org.parkerici/multitool "0.0.19"]
+                 [org.parkerici/multitool "0.0.26"]
                  [com.cemerick/url "0.1.1"]
                  [org.clojure/data.xml "0.2.0-alpha6"]
                  [org.clojure/clojurescript "1.10.520"]

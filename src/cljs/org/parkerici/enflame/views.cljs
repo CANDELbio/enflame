@@ -258,7 +258,8 @@
        [:button.btn.btn-primary.m-1
         {:class (if left? "float-left" "float-right")
          :on-mouse-down #(rf/dispatch [:do-query query])
-         :disabled (not (nil? @(rf/subscribe [:query-invalid?])))
+         ;; TODO get this working again
+         ;; :disabled   (boolean @(rf/subscribe [:query-invalid?]))
          :data-toggle "tooltip"
          ;; TODO add the js necessary to make this pretty (not sure it's worth it) (also see tooltip in Library pane)
          ;;          :data-placement "top"

@@ -13,14 +13,8 @@
 
 (def varcounter (atom {}))
 
-;;; → Multitool
-(defn safe-name [thing]
-  (when #?(:clj (instance? clojure.lang.Named thing)
-           :cljs (.-name thing))
-    (name thing)))
-
 (defn s [thing]
-  (or (safe-name thing)
+  (or (u/safe-name thing)
       (str thing)))
 
 (defn symbol-conc

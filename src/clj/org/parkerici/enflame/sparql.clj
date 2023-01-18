@@ -280,6 +280,14 @@
     `(:bgp [?s ~att ?o]))
   )
 
+(defn parse-sparql
+  "Parse SPARQL query into Jena sexp form. "
+  [sparql]
+  (read-string (str (q/parse sparql))))
+
+#_
+(parse-sparql  "select ?a ?b ?c where {?a ?b ?c}")
+
 
 (comment 
 ;;; Look here for examples
@@ -293,4 +301,13 @@
 (def x (sq/q endpoint
              '(:distinct (:project [?o] (:bgp [?s :rdf/type  :prokino/LigandActivity]
                                               [?s :prokino/hasMOA ?o])))))
-)
+
+
+;;; Not implemented??
+(q '[:conditional [:bgp [:uniprot/organism :rdfs/domain ?d1] [?d1 ?p1 ?d2] [?d2 ?p2 ?d3]] [:bgp [?d3 ?p3 ?d4]]]))
+
+
+
+
+
+

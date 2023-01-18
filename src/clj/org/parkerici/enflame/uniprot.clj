@@ -11,7 +11,7 @@
 ;;; Note: has teneded to disappear and reappear, restarting Wifi helps
 (def endpoint "https://sparql.uniprot.org/")
 
-;;; → Multitool
+;;; → Multitool - but shouldn't it be a macro rather than having to call eval TODO
 (defn curried-api
   [namespace arg1]                      ;TODO should take arb # args
   `(do
@@ -23,37 +23,57 @@
 
 ;;; These are silly
 (reg/prefix 'uniprot "http://purl.uniprot.org/core/")
+(reg/prefix 'uniprotein "http://purl.uniprot.org/uniprot/")
 (reg/prefix 'unipath "http://purl.uniprot.org/unipathway/")
 (reg/prefix 'unicite "http://purl.uniprot.org/citations/")
 (reg/prefix 'unidb "http://purl.uniprot.org/database")
 (reg/prefix 'dcterms "http://purl.org/dc/terms/")
 (reg/prefix 'unienzyme "http://purl.uniprot.org/enzyme/")
+(reg/prefix 'taxon "http://purl.uniprot.org/taxonomy/")
 (reg/prefix 'skos "http://www.w3.org/2004/02/skos/core#")
 
 ;;; Try (this does not seem to work, sigh)
 (reg/prefix 'uniuni "http://purl.uniprot.org/")
 
-(defn uniprot-q
-  [sparql]
-  (if (string? sparql)
-    (sq/do-query (sq/sparql-source "https://sparql.uniprot.org/") sparql)
-    (uniprot-q (sq/->sparql sparql :limit 100000)))) ;TODO limit temp  :limit 1000
-    
 
 (def external-ontology
   '{:rdf/Statement {:rdf/type (:owl/Class)}})
 
+
+(defn fix-domain
+  [att]
+  (->> (concat
+        (map :d1 (q `[:bgp [~att :rdfs/domain ?d1]]))
+        (map :d2 (remove #(keyword? (:d1 %)) (q `[:bgp [~att :rdfs/domain ?d1] [?d1 ?p1 ?d2]])))
+        (map :d3 (remove #(keyword? (:d2 %)) (q `[:bgp [~att :rdfs/domain ?d1] [?d1 ?p1 ?d2] [?d2 ?p2 ?d3]])))
+        (map :d4 (remove #(keyword? (:d3 %)) (q `[:bgp [~att :rdfs/domain ?d1] [?d1 ?p1 ?d2] [?d2 ?p2 ?d3] [?d3 ?p3 ?d4]]))))
+       distinct
+       (filter #(and (keyword? %) (= "uniprot" (namespace %))))))
+
+(defn fix-domains
+  [ontology-in]
+  (let [atts (->> ontology-in
+                  (filter (fn [[k v]] (let [domain (:rdfs/domain v)]
+                                        (and domain (> (count domain) 1)))))
+                  (map first))]
+    (prn :atts atts)
+    (reduce (fn [ontology att]
+              (assoc-in ontology [att :rdfs/domain] (fix-domain att)))
+            ontology-in
+            atts)))
+
 ;;; TODO shouldn't run on compile
-(defonce uniprot-ontology
+(def uniprot-ontology
   (->
    (sq/entify
-    (uniprot-q
+    (q
      '(:bgp [?s :rdfs/isDefinedBy ?uniprot]
             [?s ?p ?o])))
    (merge external-ontology)
    ;; This one field comes back with an unserializable object, just patch it
    ;; Real thing (.-lexicalValue _) if need be
-   (assoc-in [:uniprot/Pathway :rdfs/label] '("Pathway"))))
+   (assoc-in [:uniprot/Pathway :rdfs/label] '("Pathway"))
+   fix-domains))
 
 ;;; TODO damn I wish these were more composable
 
@@ -102,12 +122,6 @@
 (defn properties-for-domain
   [class]
   (filtered-by-any :rdfs/domain (all-subclasses class)))
-
-
-
-
-
-
 
 (defn uniprot?
   [ent]
@@ -181,8 +195,8 @@
 (defn describe
   [ent]
   (concat
-    (uniprot-q `(:bgp [~ent ?p ?o]))
-    (uniprot-q `(:bgp [?s ?p ~ent]))))
+    (q `(:bgp [~ent ?p ?o]))
+    (q `(:bgp [?s ?p ~ent]))))
 
 
 (comment
@@ -280,12 +294,14 @@
     (keyword (name key))
     key))
 
-;;; TODO add rdfs/label field
 ;;; TODO add skos etc fields
 (defn class-alzabo-fields
   [class]
   (apply
    merge
+   {:label {:type :string
+            :uri :rdfs/label
+            :attribute :rdfs/label}}
    (for [[n d] (properties-for-domain class)]
      {(nons n)
       {:type (or (nons (first (:rdfs/range d)))
@@ -294,7 +310,8 @@
        :uri n
        :attribute n                  ;aka :uri, but this leverages existing mechanisms
        :doc (first (:rdfs/comment d))}}
-     )))
+     )
+   ))
 
 (defn alzabo
   []
@@ -327,3 +344,101 @@
            [?protein :uniprot/classifiedWith ?concept]
            [?concept :rdfs/label ?clabel]
            [(regex ?clabel "FOO.*" "")])
+
+
+;;; Actual generated queries
+
+;;; The simplest
+(comment
+
+(:project
+ (?Pathway5 ?Pathway5Label)
+ (:bgp
+  [?Pathway5 :rdfs/label ?Pathway5Label]
+  [?Pathway5 :rdf/type :uniprot/Pathway]))
+
+;;; With regex label filtering
+(:project
+ (?Pathway9 ?Pathway9Label ?label11)
+ (:filter
+  (regex ?label11 ".*synth.*" "")
+  (:bgp
+   [?Pathway9 :rdf/type :uniprot/Pathway]
+   [?Pathway9 :rdfs/label ?label11])))
+
+;;; Taxon
+(:project
+ (?Taxon24 ?Taxon24Label ?scientificName20)
+ (:filter
+  (regex ?scientificName20 "^Tapinanthus.*" "")
+  (:bgp
+   [?Taxon24 :rdf/type :uniprot/Taxon]
+   [?Taxon24 :uniprot/scientificName ?scientificName20])))
+
+;; Proteins from organisms (seems valid but takes like 30 minutes to complete)
+(:project
+ (?Protein15 ?Protein15Label ?Taxon19 ?Taxon19Label ?scientificName9)
+ (:filter
+  (regex ?scientificName9 "^Tapinanthus.*" "")
+  (:bgp
+   [?Protein15 :rdf/type :uniprot/Protein]
+   [?Protein15 :uniprot/organism ?Taxon19]
+   [?Taxon19 :rdf/type :uniprot/Taxon]
+   [?Taxon19 :uniprot/scientificName ?scientificName9])))
+;;; "Elapsed time: 2596667.627792 msecs" (that's 43.5 fucking minutes!)
+
+;;; Ah but a mere 30 seconds if you actually do the right ghing:
+(:project
+ (?Protein15 ?Protein15Label ?Taxon19 ?scientificName9)
+ (:filter
+  (regex ?scientificName9 "^Tapinanthus.*" "")
+  (:bgp
+   [?Protein15 :rdf/type :uniprot/Protein]
+   [?Protein15 :rdfs/label ?Protein15Label]
+   [?Protein15 :uniprot/organism ?Taxon19]
+   [?Taxon19 :rdf/type :uniprot/Taxon]
+   ;; Note: Taxons don't have :rdfs/label and you have to use differnt att!
+   ;[?Taxon19 :rdfs/label ?Taxon19Label]
+   [?Taxon19 :uniprot/scientificName ?scientificName9])))
+)
+
+
+
+;;; ❖⟐❖ fixing blank-node domains ❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖
+
+
+
+
+#_
+#:uniprot{:submittedName (:uniprot/Part :uniprot/Protein),
+          :organism (:uniprot/Protein :uniprot/Sequence),
+          :date (:uniprot/Attribution :uniprot/Citation),
+          :representativeFor (:uniprot/Protein :uniprot/Sequence),
+          :mnemonic (:uniprot/Cluster :uniprot/Protein),
+          :reviewed (:uniprot/Protein :uniprot/Taxon),
+          :place (:uniprot/Book_Citation :uniprot/Thesis_Citation),
+          :substitution (:uniprot/Mutagenesis_Annotation :uniprot/Natural_Variant_Annotation),
+          :method (:uniprot/Mass_Spectrometry_Annotation :uniprot/Structure_Resource),
+          :obsolete (:uniprot/Protein :uniprot/Taxon),
+          :orientation (:uniprot/Cellular_Component :uniprot/cellularComponent),
+          :created (:uniprot/Protein :uniprot/Resource),
+          :structuredName (:uniprot/Part :uniprot/Protein),
+          :modified (:uniprot/Cluster :uniprot/Protein),
+          :cellularComponent (:uniprot/Cellular_Component :uniprot/cellularComponent),
+          :pages (:uniprot/Book_Citation :uniprot/Journal_Citation),
+          :volume (:uniprot/Book_Citation :uniprot/Journal_Citation),
+          :citation (:uniprot/Cellular_Component :uniprot/Database),
+          :alternativeName (:uniprot/Part :uniprot/Protein),
+          :conflictingSequence (:uniprot/Protein :uniprot/Sequence_Caution_Annotation),
+          :enzyme (:uniprot/Part :uniprot/Protein),
+          :attribution (:uniprot/Protein),
+          :recommendedName (:uniprot/Part :uniprot/Protein),
+          :sequence (:uniprot/Annotation :uniprot/Protein),
+          :replaces (:uniprot/Enzyme :uniprot/Protein),
+          :mappedAnnotation (:uniprot/Citation_Statement :uniprot/Protein),
+          :version (:uniprot/Protein :uniprot/Sequence),
+          :replacedBy (:uniprot/Enzyme :uniprot/Protein),
+          :topology (:uniprot/Cellular_Component :uniprot/cellularComponent)}
+
+      
+  
