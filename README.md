@@ -6,7 +6,7 @@ A visual query interface for [CANDEL](https://www.parkerici.org/research-project
 # Theory of operation
 
 Enflame is started up with a configuration file that specifies (among other things):
-- an Alzabo schema
+- an [Alzabo](https://github.com/CANDELbio/alzabo) schema
 - a data source
 - a query generation method
 
