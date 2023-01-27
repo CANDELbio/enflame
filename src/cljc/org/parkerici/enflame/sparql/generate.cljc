@@ -117,7 +117,7 @@
                               ~base)
                      base)
           ;; TODO throwing away pulls, need to implement those some other way
-          vars (map #(if (seq? %) (second %) %) find)
+          vars (distinct (map #(if (seq? %) (second %) %) find))
           ]
       (reset! tap built)
       ;; TODO
@@ -166,7 +166,9 @@
   [{:keys [current-var] :as query} blockspec]
   (let [{:keys [attribute] :as blockdef} (spec-block-def blockspec)
         value (query-value blockspec blockdef "V") 
-        var (?var (:attribute blockdef)) ;may not be used and uses up a number...
+        var (if (= attribute :rdfs/label) ;TODO kludge
+              (label-var current-var)
+              (?var (:attribute blockdef)))
         comp (keyword (query-value blockspec blockdef "comp"))]
     ;; would be better expressed with merge-recursive
     (-> query

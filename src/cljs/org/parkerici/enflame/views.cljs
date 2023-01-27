@@ -127,6 +127,8 @@
   ;; Sort is not quite what you want, but without it the columns of different entities get jumbled
   (let [cols (sort @(rf/subscribe [:display-columns]))
         idents @(rf/subscribe [:idents])
+        ;; Note: data can only contain prims, maps, vectors
+        ;; Keywords get turned into strings
         data @(rf/subscribe [:results])
         ;; First non-null value in column
         sample-value (fn [col] (some #(col %) data))]

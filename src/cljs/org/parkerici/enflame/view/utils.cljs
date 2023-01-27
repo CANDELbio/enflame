@@ -65,26 +65,24 @@
       [:div.card-body
        body]]]))
 
+
+
 ;;; Rendering
 
-;;; This code should be kept in sync with export in server.clj
-(defn render-entity-contents
+(defn render-browse-link
   [ent]
-  ;; Unlike :href #, the ugliness below won't change the page scrolling
-  (if (and (:kind ent) (or (:id ent) (:db/id ent)))
-    [:a
-     ;; This should work but doesn't, so we go through an ugly kludge
-     #_ {:href "javascript:void(0)" :on-click #(rf/dispatch [:browse ent])}
-     {:href (str "javascript:org.parkerici.enflame.view.browser.browse.call(null," ; no idea why null is needed, but it is
-                 (or (:id ent) (:db/id ent))
-                 ",\""
-                 (name (:kind ent))
-                 "\");")}
-     (entity-label ent)]
-    (entity-label ent)))
+  [:a
+   ;; This should work but doesn't, so we go through an ugly kludge
+   #_ {:href "javascript:void(0)" :on-click #(rf/dispatch [:browse ent])}
+   {:href (str "javascript:org.parkerici.enflame.view.browser.browse.call(null,"
+               (pr-str (:id ent))
+               ");")}
+   (entity-label ent)])
 
-(defn render-entity [ent]
-  (render-entity-contents ent))
+;;; This code should be kept in sync with export in server.clj
+(defn render-entity
+  [ent]
+  (render-browse-link ent))
 
 (defn delist
   [thing]
@@ -104,7 +102,6 @@
           (take list-limit l)))
     ~(when (>= (count l) list-limit)
        [:i (str ", " (count l) " total")])])
-
 
 (defn render
   [thingy idents]

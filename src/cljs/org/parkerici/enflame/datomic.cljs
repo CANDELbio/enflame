@@ -119,6 +119,46 @@
        (dissoc :error)
        (assoc :status :interrupted))))
 
+;;; Obviously in wrong file!
+
+;;; Old version that had keyword URIs
+#_
+(defn reshape-sparql-row
+  [row]
+  (reduce-kv (fn [row k v]
+               (let [labelvar (keyword (str (name k) "Label"))]
+                 (if (contains? row labelvar)
+                   (-> row
+                       (dissoc labelvar)
+                       (assoc k {:entity v
+                                 :kind (namespace v)
+                                 :id (name v)
+                                 :label (get row labelvar)}))
+                   row)))
+             row
+             row))
+
+;;; New full URI (strings) mode.
+(defn reshape-sparql-row
+  [row]
+  (reduce-kv (fn [row k v]
+               (let [labelvar (keyword (str (name k) "Label"))]
+                 (if (contains? row labelvar)
+                   (-> row
+                       (dissoc labelvar)
+                       (assoc k {:entity v
+                                 ; :kind (namespace v)
+                                 ; :id (name v)
+                                 :id v
+                                 :label (get row labelvar)}))
+                   row)))
+             row
+             row))
+
+(defn reshape-sparql-results
+  [r]
+  (map reshape-sparql-row r))
+
 (rf/reg-event-db
  :query-results
  (fn [db [_ {:keys [results count clipped]}]]
@@ -127,7 +167,7 @@
          ;; assuming a certain form of query (:project <colk>...)
          query-cols (second @(rf/subscribe [:query]))
          ;; TODO CANDEL reshaping not working, better to use raw for now
-         reshaped results #_ (results/reshape-results results idents query-cols)]
+         reshaped (reshape-sparql-results results) #_ (results/reshape-results results idents query-cols)]
      (-> db
          (assoc :status :finished
                 :results reshaped

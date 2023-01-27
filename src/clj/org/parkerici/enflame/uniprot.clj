@@ -7,8 +7,8 @@
    [clojure.set :as set]
    )  )
 
+;;; TODO arrange for this to get loaded !
 ;;; TODO get from config
-;;; Note: has teneded to disappear and reappear, restarting Wifi helps
 (def endpoint "https://sparql.uniprot.org/")
 
 ;;; → Multitool - but shouldn't it be a macro rather than having to call eval TODO

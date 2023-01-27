@@ -54,6 +54,7 @@
   (let [bindings (.getBinding rb)
         vars (iterator-seq (.vars bindings))]
     (zipmap (map #(keyword (.getVarName %)) vars)
+            ;; graph/data turns URIs into keywords, TODO might want to not do that, we end up throwing that away for the client-side operations
             (map #(graph/data (.get bindings %)) vars))))
 
 (defn do-query [source q]
@@ -311,3 +312,21 @@
 
 
 
+;;; Convert a namespaced keyword to a proper node
+(defn node
+  [kw]
+  (arachne.aristotle.graph/node kw))
+
+(defn uri
+  [kw]
+  (.getURI (node kw)))
+
+;;; Replace :uniprot/Foo with their real URL
+(defn unkw-results
+  [results]
+  (clojure.walk/prewalk
+   #(if (and (keyword? %)
+             (namespace %))
+      (str "<" (uri %) ">")                           ;Maybe add <> ? need to be distinguished from real strings
+      %)
+   results))

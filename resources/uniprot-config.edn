@@ -17,7 +17,7 @@
  :rh-cards [:query
             #_ :share
             :compact                  ;debug only
-            #_ :browser                    ;someday
+            :browser                    ;someday
             ]
 
  }

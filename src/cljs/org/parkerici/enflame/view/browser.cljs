@@ -3,6 +3,7 @@
    [org.parkerici.enflame.view.utils :as vu]
    [re-frame.core :as rf]
    [reagent.dom.server]
+   [org.parkerici.multitool.core :as u]
    [org.parkerici.enflame.blockly :as blockly]
    [org.parkerici.enflame.candel.query :as query]
    [org.parkerici.enflame.datomic :as datomic]
@@ -22,6 +23,8 @@
      )))
 
 ;;; This stuff is a real mess
+;;; Old CANDEL version
+#_
 (rf/reg-event-db
  :browse-id
  (fn [db [_ ddb id kind]]
@@ -30,6 +33,32 @@
     (or ddb (:ddb db))
     (query/entity-pull-query kind)
     (list id)
+    nil
+    #(rf/dispatch [:browse-results %])
+    )
+   (-> db
+;;; Would be nice...
+;       (assoc-in [:browse :browsing] ent)
+       (assoc-in [:browse :spin?] true))
+   ))
+
+;;; Probably should have uid as string, this is stupid. 
+(defn sparql-pull-query
+  [id kind]
+  (prn :spq id kind)
+  (u/de-ns
+   `(:project (?p ?o)
+              (:bgp
+               [~id ?p ?o]))))
+
+;;; SPARQL version
+(rf/reg-event-db
+ :browse-id
+ (fn [db [_ id kind]]
+   (datomic/do-query
+    nil #_ (or ddb (:ddb db))
+    (sparql-pull-query id kind)
+    nil
     nil
     #(rf/dispatch [:browse-results %])
     )
@@ -81,6 +110,8 @@
      (and (>= new-index 0)
           (< new-index (count history))))))
 
+;;; CANDEL version
+#_
 (rf/reg-event-db
  :browse-results
  (fn [db [_ {:keys [results]}]]
@@ -88,6 +119,27 @@
    (let [object (->  (ffirst results)
                      (results/regularize-entity :browser (get-in db [:idents (:ddb db)]))
                      results/reshape-top-entity)]
+
+     (-> db
+         (assoc-in [:browse :data] object)
+         (assoc-in [:browse :spin?] false)
+         (update-in [:browse :history] conj object)
+         ))))
+
+;;; SPARQL version
+(defn reshape-sparql
+  [results]
+  (reduce (fn [obj row]
+            (update obj (:p row) conj (or (:o row) (:s row))))
+          {}
+          results))
+
+(rf/reg-event-db
+ :browse-results
+ (fn [db [_ {:keys [results]}]]
+   (prn :results results)
+   ;; This is still a bit hinky
+   (let [object (reshape-sparql results)]
 
      (-> db
          (assoc-in [:browse :data] object)
@@ -103,7 +155,8 @@
 ;;; This is called by javascript from ag-grid
 (defn ^:export browse
   [id kind]
-  (rf/dispatch [:browse-id nil id (keyword kind)]))
+  (prn :browse id kind)
+  (rf/dispatch [:browse-id id kind]))
 
 (defn history
   [data browsing]                       ;TODO Are both these necessary
