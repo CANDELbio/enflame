@@ -11,6 +11,7 @@
    )
   )
 
+;;; CANDEL only, not sure why this exists when :browse-id handler doe the same thing
 (defn browser-pull
   [ddb ent handler]
   (let [kind (results/infer-kind ent)]
@@ -51,24 +52,31 @@
               (:bgp
                [~id ?p ?o]))))
 
+
+
+(defn sparql-do-pull
+  [id]
+  (datomic/do-query
+    nil
+    (sparql-pull-query id nil)
+    nil
+    nil
+    #(rf/dispatch [:browse-results %])
+    ))
+
 ;;; SPARQL version
 (rf/reg-event-db
  :browse-id
  (fn [db [_ id kind]]
-   (datomic/do-query
-    nil #_ (or ddb (:ddb db))
-    (sparql-pull-query id kind)
-    nil
-    nil
-    #(rf/dispatch [:browse-results %])
-    )
+   (sparql-do-pull id)
    (-> db
 ;;; Would be nice...
-;       (assoc-in [:browse :browsing] ent)
+       ; (assoc-in [:browse :browsing] ent)
        (assoc-in [:browse :spin?] true))
    ))
 
 ;;; TODO changing db should invalidate :browse state and perhaps other things
+;;; CANDEL
 (rf/reg-event-db
  :browse-0
  (fn [db [_ ent ddb]]
@@ -76,6 +84,15 @@
     (or ddb (:ddb db))                  ;TODO maybe set ddb if if isn't right
     ent
     #(rf/dispatch [:browse-results %]))
+   (-> db
+       (assoc-in [:browse :browsing] ent)
+       (assoc-in [:browse :spin?] true))))
+
+;;; SPARQL
+(rf/reg-event-db
+ :browse-0
+ (fn [db [_ ent ddb]]
+   (sparql-do-pull ent)
    (-> db
        (assoc-in [:browse :browsing] ent)
        (assoc-in [:browse :spin?] true))))
@@ -209,7 +226,8 @@
                    css-class (when kind (str (name kind) "-kind"))]
              [:tr {:class (if (= k (ffirst sorted)) "browser_head" "browser_row")}
               [:th {:class (str "browser_row_label" " " css-class)}
-               k]
+               ;; TODO maybe these don't want to be links? Cute though, and sometimes they have interesting attributes of their own
+               (vu/render k nil)]
               [:td {:class "browser_row_contents"}
                (vu/render v idents)]])))]]
        ])))

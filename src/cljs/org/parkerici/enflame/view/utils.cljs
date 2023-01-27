@@ -103,6 +103,18 @@
     ~(when (>= (count l) list-limit)
        [:i (str ", " (count l) " total")])])
 
+(defn sparql-uri?
+  [thing]
+  (and (string? thing)
+       (re-matches #"<.*>" thing)))
+
+;;; Render attributes by short name (note: something like "uniprot/core/organism" would also work)
+(defn uri-short-name
+  [uri]
+  (let [short-name (second (re-matches #"<.*[\/\#](.*?)>" uri))]
+    ;; TODO should have full name as tooltip or something
+    short-name))
+
 (defn render
   [thingy idents]
   (let [thing (delist thingy)]
@@ -112,9 +124,11 @@
           (if-let [ident (get idents (:db/id thing))]
             (name ident)
             (render-entity thing))
-          (results/entity-id? thing)
+          ;; CANDEL
+          #_ (results/entity-id? thing)
+          (sparql-uri? thing)
           (if-let [ident (get idents thing)]
             (name ident)
-            (render-entity {:id thing :label (str thing)})) ;this should happen only on :db/id
+            (render-entity {:id thing :label (uri-short-name thing)})) ;this should happen only on :db/id
           :else
           (str thing))))

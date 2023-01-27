@@ -176,7 +176,8 @@
                 (cond (= value :any)
                       [[current-var attribute var]]
                       (= comp :is)
-                      [[current-var attribute value]]
+                      [[current-var attribute value]
+                       [current-var attribute var]] ;we also need this, so label gets included in result set and transmitted to client.  
                       :else             ;its a regex of some kind
                       [[current-var attribute var]])
                 )

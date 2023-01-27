@@ -12,8 +12,9 @@
 
 ;;; Not clear what Aristotle does that isn't better handled by Jena SSE https://jena.apache.org/documentation/notes/sse.html
 
+(def sparql-default-limit 2000)         ;Sanity preservation. 
 
-(defn ->sparql [bgp & {:keys [limit]}]
+(defn ->sparql [bgp & {:keys [limit] :or {limit sparql-default-limit}}]
   (let [query (-> bgp
                   q/build
                   org.apache.jena.sparql.algebra.OpAsQuery/asQuery)]
@@ -322,11 +323,16 @@
   (.getURI (node kw)))
 
 ;;; Replace :uniprot/Foo with their real URL
-(defn unkw-results
+;;; Also fix dates and any other unserializable values
+(defn tweak-results                    
   [results]
   (clojure.walk/prewalk
-   #(if (and (keyword? %)
-             (namespace %))
-      (str "<" (uri %) ">")                           ;Maybe add <> ? need to be distinguished from real strings
-      %)
+   #(cond (and (keyword? %)
+               (namespace %))
+          (str "<" (uri %) ">")                          
+          ;; TODO any other unserializable types?
+          (instance? org.apache.jena.datatypes.xsd.XSDDateTime %)
+          (str %)
+          :else
+          %)
    results))

@@ -376,15 +376,7 @@
    [?Taxon24 :uniprot/scientificName ?scientificName20])))
 
 ;; Proteins from organisms (seems valid but takes like 30 minutes to complete)
-(:project
- (?Protein15 ?Protein15Label ?Taxon19 ?Taxon19Label ?scientificName9)
- (:filter
-  (regex ?scientificName9 "^Tapinanthus.*" "")
-  (:bgp
-   [?Protein15 :rdf/type :uniprot/Protein]
-   [?Protein15 :uniprot/organism ?Taxon19]
-   [?Taxon19 :rdf/type :uniprot/Taxon]
-   [?Taxon19 :uniprot/scientificName ?scientificName9])))
+
 ;;; "Elapsed time: 2596667.627792 msecs" (that's 43.5 fucking minutes!)
 
 ;;; Ah but a mere 30 seconds if you actually do the right ghing:

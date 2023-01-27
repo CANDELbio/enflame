@@ -42,7 +42,7 @@
   ;; TODO Multimethod?
   (case (:type (:source config))
     :candel (datomic/query db query args candelabra-token config)
-    :sparql (sparql/unkw-results        ;TEMP?
+    :sparql (sparql/tweak-results        ;TEMP?
              (sparql/q (:sparql-endpoint (:source config)) query))))
 
 (defn handle-query
