@@ -1,4 +1,5 @@
-{:source {:type :sparql
+{:requires [org.parkerici.enflame.uniprot]
+ :source {:type :sparql
           :sparql-endpoint "https://sparql.uniprot.org/"
           ;; TODO implement
           :prefixes {uniprot "http://purl.uniprot.org/core/"

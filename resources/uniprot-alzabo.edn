@@ -1,3 +1,6 @@
+;;; NOTE: hand edited, don't overwrite!
+
+
 {:title "UNIPROT",
  :kinds
  {:Organelle
@@ -44,7 +47,9 @@
     :scientificName
     {:type :string,
      :uri :uniprot/scientificName,
-     :attribute :uniprot/scientificName},
+     :attribute :uniprot/scientificName
+     :name? true
+     },
     :reviewed
     {:type :boolean,
      :uri :uniprot/reviewed,
@@ -62,7 +67,8 @@
      :attribute :uniprot/obsolete,
      :doc "True if this resource has been replaced or deleted."},
     :host {:type :Taxon, :uri :uniprot/host, :attribute :uniprot/host},
-    :label {:type :string, :uri :rdfs/label, :attribute :rdfs/label},
+    ;; Apparently not!
+    #_ :label #_ {:type :string, :uri :rdfs/label, :attribute :rdfs/label},
     :synonym
     {:type :string,
      :uri :uniprot/synonym,
@@ -349,6 +355,8 @@
   {:title "Gene",
    :fields
    {:label {:type :string, :uri :rdfs/label, :attribute :rdfs/label},
+    ;; Added by hand. Looks like at least some genes don't have :rdfs/label
+    :prefLabel {:type :string :uri :skos/prefLabel :attribute  :skos/prefLabel}
     :orfName
     {:type :string,
      :uri :uniprot/orfName,

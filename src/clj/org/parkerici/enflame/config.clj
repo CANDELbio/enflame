@@ -15,6 +15,8 @@
         file-config (edn/read-string (slurp file))
         config (merge env-config file-config)]
     (pprint/pprint config)
+    (doseq [r (:requires config)]
+      (require r))
     (reset! the-config config)))
 
 (defn config
@@ -30,6 +32,7 @@
 
 
 ;;; TODO
+:requires
 :port 
 :dev? 
 :schema                                 ;schema file or url (or)

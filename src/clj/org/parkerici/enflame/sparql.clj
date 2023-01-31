@@ -204,6 +204,12 @@
     (do-query (sparql-source endpoint) sparql)
     (q endpoint (->sparql sparql))))
 
+(defn ^:api describe
+  [endpoint ent]
+  (concat
+    (q endpoint `(:bgp [~ent ?p ?o]))
+    (q endpoint `(:bgp [?s ?p ~ent]))))
+
 
 (defn ontology-query
   [endpoint]
@@ -336,3 +342,4 @@
           :else
           %)
    results))
+
