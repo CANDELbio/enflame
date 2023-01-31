@@ -1,6 +1,3 @@
-;;; NOTE: hand edited, don't overwrite!
-
-
 {:title "UNIPROT",
  :kinds
  {:Organelle
@@ -47,9 +44,7 @@
     :scientificName
     {:type :string,
      :uri :uniprot/scientificName,
-     :attribute :uniprot/scientificName
-     :name? true
-     },
+     :attribute :uniprot/scientificName},
     :reviewed
     {:type :boolean,
      :uri :uniprot/reviewed,
@@ -67,8 +62,10 @@
      :attribute :uniprot/obsolete,
      :doc "True if this resource has been replaced or deleted."},
     :host {:type :Taxon, :uri :uniprot/host, :attribute :uniprot/host},
-    ;; Apparently not!
-    #_ :label #_ {:type :string, :uri :rdfs/label, :attribute :rdfs/label},
+    :label
+    {:type :string,
+     :uri :uniprot/scientificName,
+     :attribute :uniprot/scientificName},
     :synonym
     {:type :string,
      :uri :uniprot/synonym,
@@ -135,7 +132,7 @@
      :uri :uniprot/translatedFrom,
      :attribute :uniprot/translatedFrom},
     :fragment
-    {:type :_934f2f4b1742160a7cabe73bfae412a8,
+    {:type :_6b6e68dc3dd2438642051e83c5d1bf84,
      :uri :uniprot/fragment,
      :attribute :uniprot/fragment,
      :doc
@@ -149,7 +146,7 @@
     :length
     {:type :int, :uri :uniprot/length, :attribute :uniprot/length},
     :sequenceFor
-    {:type :_341fcbedbe860321d6a43b60b0bc5fe3,
+    {:type :_32ad4e65b5df61977d7de4210c121294,
      :uri :uniprot/sequenceFor,
      :attribute :uniprot/sequenceFor,
      :doc "A resource that describes this sequence."},
@@ -313,7 +310,7 @@
      :doc
      "A publication from which data was by a extracted by a mapping from non UniProt origin, or which contains additional information."},
     :replaces
-    {:type :_f1d2077fbda7736db042867774ef80f9,
+    {:type :_5714be8382f0d1adc921894c1fbb2dd1,
      :uri :uniprot/replaces,
      :attribute :uniprot/replaces,
      :doc "A resource that is replaced by this resource."},
@@ -331,7 +328,7 @@
     :version
     {:type :int, :uri :uniprot/version, :attribute :uniprot/version},
     :replacedBy
-    {:type :_8e5f52771e3b776839235d09ea0f4a4d,
+    {:type :_ce64111704c1e5e6af5a354e8540aeac,
      :uri :uniprot/replacedBy,
      :attribute :uniprot/replacedBy,
      :doc "A resource that replaces this resource."},
@@ -354,9 +351,8 @@
   :Gene
   {:title "Gene",
    :fields
-   {:label {:type :string, :uri :rdfs/label, :attribute :rdfs/label},
-    ;; Added by hand. Looks like at least some genes don't have :rdfs/label
-    :prefLabel {:type :string :uri :skos/prefLabel :attribute  :skos/prefLabel}
+   {:label
+    {:type :string, :uri :skos/prefLabel, :attribute :skos/prefLabel},
     :orfName
     {:type :string,
      :uri :uniprot/orfName,
@@ -643,7 +639,7 @@
      :doc
      "A rememberable string that can be used to find entries, not a stable identifier!"},
     :someMembersClassifiedWith
-    {:type :_3c618eea3d8a02bf75309716a05b94be,
+    {:type :_0e18955f45d54a0023e960318b145869,
      :uri :uniprot/someMembersClassifiedWith,
      :attribute :uniprot/someMembersClassifiedWith,
      :doc
@@ -654,7 +650,7 @@
      :attribute :uniprot/modified,
      :doc "The date a resource was last modified."},
     :identity
-    {:type :_fe11e2bb13384b4238907a7d7b640362,
+    {:type :_461878d3ae1962d08aa95249c92dce6f,
      :uri :uniprot/identity,
      :attribute :uniprot/identity,
      :doc "The level of sequence identity in a cluster."},
@@ -732,12 +728,12 @@
    :fields
    {:label {:type :string, :uri :rdfs/label, :attribute :rdfs/label},
     :replaces
-    {:type :_f1d2077fbda7736db042867774ef80f9,
+    {:type :_5714be8382f0d1adc921894c1fbb2dd1,
      :uri :uniprot/replaces,
      :attribute :uniprot/replaces,
      :doc "A resource that is replaced by this resource."},
     :replacedBy
-    {:type :_8e5f52771e3b776839235d09ea0f4a4d,
+    {:type :_ce64111704c1e5e6af5a354e8540aeac,
      :uri :uniprot/replacedBy,
      :attribute :uniprot/replacedBy,
      :doc "A resource that replaces this resource."},
@@ -932,7 +928,7 @@
      :uri :uniprot/disease,
      :attribute :uniprot/disease},
     :locatedIn
-    {:type :_f1cd6d4fb521d72fcc3b9cadda2e2178,
+    {:type :_c425b8262b8c8f24983a3e71d90a3858,
      :uri :uniprot/locatedIn,
      :attribute :uniprot/locatedIn},
     :measuredValue

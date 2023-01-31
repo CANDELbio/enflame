@@ -23,12 +23,9 @@
 (eval (curried-api 'org.parkerici.enflame.sparql endpoint))
 
 
+;; Make Statement by a top classs, otherwise we get a lot of others like Endpoint_Statement
 (def external-ontology
   '{:rdf/Statement {:rdf/type (:owl/Class)}
-    ;; This way might be cleaner but more work
-    ;; :Taxon {:fields {:scientificName {:name? true}}}
-    :Taxon {:fields {:label {:type :string :uri :uniprot/scientificName :attribute :uniprot/scientificName}}}
-    :Gene  {:fields {:label {:type :string :uri :skos/prefLable :attribute :skos/prefLable}}}
     })
 
 ;;; ❖⟐❖ fixing blank-node domains ❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖⟐❖
@@ -54,7 +51,8 @@
             ontology-in
             atts)))
 
-;;; TODO shouldn't run on compile
+;;; This is a map of all classes and attributes, and their properties
+;;; incomplete though, it doesn't include skos properties eg
 (def uniprot-ontology
   (->
    (sq/entify
@@ -64,7 +62,7 @@
    (merge external-ontology)
    ;; This one field comes back with an unserializable object, just patch it
    ;; Real thing (.-lexicalValue _) if need be
-   (assoc-in [:uniprot/Pathway :rdfs/label] '("Pathway"))
+;   (assoc-in [:uniprot/Pathway :rdfs/label] '("Pathway"))
    fix-domains))
 
 (defn filtered-by
@@ -228,28 +226,40 @@
      )
    ))
 
+(def schema-extras
+  {
+   ;; This way might be cleaner but more work
+   ;; :Taxon {:fields {:scientificName {:name? true}}}
+   :Taxon {:fields {:label {:type :string :uri :uniprot/scientificName :attribute :uniprot/scientificName}}}
+   :Gene  {:fields {:label {:type :string :uri :skos/prefLabel :attribute :skos/prefLabel}}}
+   })
+
+
+
 (defn alzabo
   []
   (u/clean-walk
    {:title "UNIPROT"
     :kinds
-    (apply
-     merge
-     (for [[tc tc-def] (top-classes)]
+    (u/merge-recursive
+     (apply
+      merge
+      (for [[tc tc-def] (top-classes)]
        {(nons tc)
         {:doc (first (:rdfs/comment tc-def))
          :title (first (:rdfs/label tc-def)) ;not actually used or defined
          :fields (or (class-alzabo-fields tc) {})
          :uri tc
-         }}))}
+         }}))
+     schema-extras)}
    nil?))
 
+(defn write-ontology
+  []
+  (ju/schppit "resources/uniprot-alzabo.edn" (alzabo)))
 
-#_
-(ju/schppit "uniprot-ontology.edn" uniprot-ontology)
 
-#_
-(ju/schppit "resources/uniprot-alzabo.edn" (alzabo))
+
 
 #_
 (frequencies (map :rdfs/domain (vals (properties))))

@@ -12,7 +12,8 @@
 
 ;;; Not clear what Aristotle does that isn't better handled by Jena SSE https://jena.apache.org/documentation/notes/sse.html
 
-(def sparql-default-limit 2000)         ;Sanity preservation. 
+;;; Warning: needs to be at lease 2700 for uniprot ontology query
+(def sparql-default-limit 3000)         ;Sanity preservation. 
 
 (defn ->sparql [bgp & {:keys [limit] :or {limit sparql-default-limit}}]
   (let [query (-> bgp

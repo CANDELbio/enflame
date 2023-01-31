@@ -166,7 +166,7 @@
   [{:keys [current-var] :as query} blockspec]
   (let [{:keys [attribute] :as blockdef} (spec-block-def blockspec)
         value (query-value blockspec blockdef "V") 
-        var (if (= attribute :rdfs/label) ;TODO kludge
+        var (if (= "label %2 %1" (:message0 blockdef)) ;TODO kludge – better to put :label in blockdef somewher
               (label-var current-var)
               (?var (:attribute blockdef)))
         comp (keyword (query-value blockspec blockdef "comp"))]
