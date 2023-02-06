@@ -16,6 +16,7 @@
  :port 1992
  :dev? true                             ;TODO control this somehow maybe aero/env
  :rh-cards [:query
+            :sparql
             #_ :share
             :compact                  ;debug only
             :browser                    ;someday

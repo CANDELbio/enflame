@@ -57,6 +57,14 @@
     (response/response
      {:count (count results) :clipped (count clipped) :results clipped})))
 
+;;; Kludge because edn → sparql needs to be done on server
+(defn handle-query-translate
+  [req config]
+  (let [{:keys [query]} (:params req)]
+    (response/response
+     (case (:type (:source config))
+       :sparql (sparql/->sparql (read-string query))))))
+
 (defn handle-download
   [req config]
   (let [{:keys [query db]} (:params req)
@@ -136,6 +144,7 @@
      (GET "/schema" [version]     
        (response/response (config/read-schema version)))
      (GET "/query" req (handle-query req config))
+     (GET "/query-translate" req (handle-query-translate req config))
      (context "/library" []
        (GET "/get" [key]
          (handle-get key))

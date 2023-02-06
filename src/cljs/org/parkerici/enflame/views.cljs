@@ -14,6 +14,7 @@
    [org.parkerici.enflame.candel.query :as query] ;TOODO
    [org.parkerici.enflame.datomic :as datomic]
    [org.parkerici.enflame.view.candel-cards :as candel]
+   [org.parkerici.enflame.view.card.sparql :as sparql] ;TODO other cards in this namespace
    [org.parkerici.enflame.view.library :as library]
    )
   )
@@ -329,7 +330,8 @@
    :xml xml-card
    :share library/share-card
    :browser obrowser/browser
-   :graph graph-pane})
+   :graph graph-pane
+   :sparql sparql/card})
 
 (defn rh-panel
   []
