@@ -94,7 +94,7 @@
 ;;; Actual
 
 ;;; TODO copypasta from candel.query, could be abstracted up
-(defmulti build-query (fn [_ blockspec]
+(defmulti build-query (fn [x blockspec]
                         (-> blockspec
                             :type
                             blockdefs/block-def
@@ -107,7 +107,7 @@
 
 (defn build-top-query
   [blockspec]
-  #_ (reset-vars)
+  (reset-vars)
   (when blockspec
     (let [{:keys [filter where find] :as built}
           (build-query {} (assoc blockspec :top? true))
@@ -131,7 +131,7 @@
 
 (defn kind-label
   [kind]
-  :rdfs/label)
+  (get-in (schema/kind-def kind) [:fields :label :uri]))
 
 (defmethod build-query :query-builder-query
   [{:keys [current-var] :as _query} {:keys [top?] :as blockspec}]
@@ -150,11 +150,11 @@
         subquery-filters (mapcat :filter subqueries)
         base-query
         {:find (concat (select-terms output-var output-type)
-                         subquery-selects)
+                       subquery-selects)
          :where (if-let [label-attribute
-                         (and top?
-                              (empty? subquery-wheres)
-                              (kind-label output))]
+                         (and ;; top?
+                          ;; (empty? subquery-wheres)
+                          (kind-label output))]
                   (cons [output-var label-attribute (label-var output-var)] base-wheres)
                   base-wheres)
          :filter subquery-filters

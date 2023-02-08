@@ -78,6 +78,8 @@
 
 (defn kind-color [kind]
   (or (kind-defined-color kind)
+      ;; Crock, makes uniprot use Candel-compatible colors for common classes
+      (kind-defined-color (keyword (clojure.string/lower-case (name kind))))
       ;; Will do something vaguely reasonable for unknown kinds (TODO would be good to control the color a bit)
       (str "#" (u/hex-string (mod (hash kind) 0xffffff)))))
 
