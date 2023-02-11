@@ -1,25 +1,27 @@
 (defproject enflame "0.0.29-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.10.1"]
-                 [clj-http "3.12.1"
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [clj-http "3.12.3"
                   :exclusions [commons-codec]]
-                 [cheshire "5.10.0"]
+                 [cheshire "5.11.0"]
+
+                 [com.datomic/client-cloud "1.0.122"]
 
                  ;; Ring and its large family
-                 [org.eclipse.jetty/jetty-client "9.4.12.v20180830"] ;has to match ring version of jetty
-                 [org.eclipse.jetty/jetty-server "9.4.12.v20180830"]
-                 [org.eclipse.jetty/jetty-http "9.4.12.v20180830"]
-                 [org.eclipse.jetty/jetty-util "9.4.12.v20180830"]
+                 [org.eclipse.jetty/jetty-client "9.4.48.v20220622"] ;has to match ring version of jetty
+                 [org.eclipse.jetty/jetty-server "9.4.48.v20220622"]
+                 [org.eclipse.jetty/jetty-http "9.4.48.v20220622"]
+                 [org.eclipse.jetty/jetty-util "9.4.48.v20220622"]
 
-                 [ring "1.8.0"]
-                 [ring/ring-jetty-adapter "1.7.1"]
-                 [ring/ring-defaults "0.3.2"]
-                 [ring-logger "1.0.1"]
-                 [ring-oauth2 "0.1.4"]
+                 [ring "1.9.6"]
+                 [ring/ring-jetty-adapter "1.9.6"]
+                 [ring/ring-defaults "0.3.4"]
+                 [ring-logger "1.1.1"]
+                 [ring-oauth2 "0.2.0" :exclusions [org.apache.httpcomponents/httpcore]]
                  [org.slf4j/slf4j-simple "1.7.26"]                   ;required to turn off warning
                  [com.taoensso/timbre "4.10.0"]
                  [org.clojure/data.csv "0.1.4"]
                  [compojure "1.6.1" :exclusions [ring.core ring.codec]]
-                 [ring-middleware-format "0.7.4" :exclusions [javax.xml.bind/jaxb-api]]
+                 [ring-middleware-format "0.7.5" :exclusions [javax.xml.bind/jaxb-api]]
                  [bk/ring-gzip "0.3.0"]
                  [trptcolin/versioneer "0.2.0"]
                  [com.google.cloud/google-cloud-datastore "1.105.7"
@@ -31,7 +33,7 @@
                                com.fasterxml.jackson.core/jackson-core]]
                  [environ "1.1.0"]
                  [me.raynes/fs "1.4.6"]
-                 [org.parkerici/multitool "0.0.19"]
+                 [org.parkerici/multitool "0.0.26"]
                  [com.cemerick/url "0.1.1"]
                  [org.clojure/data.xml "0.2.0-alpha6"]
                  [org.clojure/clojurescript "1.10.520"]
