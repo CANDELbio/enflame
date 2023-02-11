@@ -1,5 +1,6 @@
 (ns org.parkerici.enflame.server
   (:require [org.parkerici.enflame.datomic-relay :as datomic]
+            [org.parkerici.enflame.datomic-client :as datomic-client]
             [org.parkerici.enflame.download :as download]
             [org.parkerici.enflame.embed-server :as embed]
             [org.parkerici.enflame.admin :as admin]
@@ -43,7 +44,8 @@
         _args (if (u/nullish? args) [] (read-string args))
         _limit (if (u/nullish? limit) nil (Integer. limit))
         candelabra-token (get-in req [:cookies "candelabra-token" :value])
-        results (datomic/query db _query _args candelabra-token config)
+        results #_ (datomic/query db _query _args candelabra-token config)
+        (datomic-client/query db _query _args)
         clipped (if _limit (take _limit results) results)]
     (response/response
      {:count (count results) :clipped (count clipped) :results clipped})))

@@ -68,6 +68,23 @@
       (rf/dispatch [:dispatch-when :schema [:library-load library]])))
   )
 
+;;; This is identitical to :candel (for now)
+(defmethod custom-init :datomic-cloud
+  [_]
+  (rf/dispatch [:get-ddbs])            
+  (let [{:keys [library ddb query] :as _params} (browser/url-params)]
+    (if-let [ddb (or ddb (config/get-local :ddb))]
+      (rf/dispatch [:set-ddb ddb])
+      (rf/dispatch [:set-schema]))
+    (when query
+      ;; Wait for schema to be set
+      (rf/dispatch [:dispatch-when :schema [:set-query query]]))
+    ;; NOt really CANDEL specifica
+    (when library
+      ;; Wait for schema to be set
+      (rf/dispatch [:dispatch-when :schema [:library-load library]])))
+  )
+
 
 (defn ^:export init
   []

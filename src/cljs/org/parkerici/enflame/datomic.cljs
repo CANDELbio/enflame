@@ -40,8 +40,9 @@
                nil                      ;no limit
                (fn [{:keys [results _count _clipped]}]
                  ;; TODO maybe filter out the Datomic bookkeeping ones
-                 (rf/dispatch [:set-idents ddb (zipmap (map first results)
-                                                       (map (comp reader/read-string second) results))]))
+                 #_(zipmap (map first results)
+                           (map (comp reader/read-string second) results))
+                 (rf/dispatch [:set-idents ddb (into {} results)]))
                ))
    db))
 
