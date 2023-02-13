@@ -18,7 +18,9 @@
                  [ring-logger "1.1.1"]
                  [ring-oauth2 "0.2.0" :exclusions [org.apache.httpcomponents/httpcore]]
                  [org.slf4j/slf4j-simple "1.7.26"]                   ;required to turn off warning
-                 [com.taoensso/timbre "4.10.0"]
+                 [io.aviso/pretty "1.3"]
+                 [com.taoensso/timbre "4.10.0"
+                  :exclusions [io.aviso/pretty]]
                  [org.clojure/data.csv "0.1.4"]
                  [compojure "1.6.1" :exclusions [ring.core ring.codec]]
                  [ring-middleware-format "0.7.5" :exclusions [javax.xml.bind/jaxb-api]]
@@ -45,7 +47,9 @@
                   :exclusions [cljsjs/vega      ; we insert a later version of Vega to fix some bugs
                                cljsjs/vega-lite
                                cljsjs/vega-embed
-                               cljsjs/vega-tooltip]]
+                               cljsjs/vega-tooltip
+                               com.taoensso/encore]]
+                  
                  [cljsjs/vega "5.20.2-0"]
                  [cljsjs/vega-lite "5.1.1-0"]
                  [cljsjs/vega-embed "6.19.0-0"]

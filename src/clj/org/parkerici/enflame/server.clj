@@ -150,7 +150,7 @@
 (def site-defaults
   (-> middleware/site-defaults
       (assoc-in [:security :anti-forgery] false)          ;interfering with save?
-      (assoc-in [:session :cookie-attrs :same-site] :lax) ;for oauth
+      #_ (assoc-in [:session :cookie-attrs :same-site] :lax) ;for oauth
       (assoc-in [:session :store] common-store)
       (assoc-in [:static :resources] nil)))                 ;this needs to go after oauth
 
@@ -168,7 +168,7 @@
                    (when-not (some #(= % (:uri message)) no-log)
                      (log/log level throwable message)))})
        (wrap-resource "public" {:allow-symlinks? true})
-       (oauth/wrap-oauth config)
+       #_ (oauth/wrap-oauth config)
        (middleware/wrap-defaults site-defaults)
        wrap-exception-handling
        wrap-restful-format

@@ -173,8 +173,11 @@
 
 (defn error
   [[status response]]
-  [:div {:style {:color "red"}}
-   (str status ": " response)])
+  [:div
+   [:h3 "Error"]
+   [:pre {:style {:color "red"}}
+    (with-out-str (pprint/pprint status))]
+   ])
 
 (defn download-link
   []
