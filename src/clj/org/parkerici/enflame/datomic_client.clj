@@ -7,12 +7,18 @@
 
 ;;; TODO do these at a reasonable time
 
-(def client (d/client (config/config :source :config)))
+(u/def-lazy client (d/client (config/config :source :config)))
 
 ;;; OK probably we want to handle multiple databases
-(def conn (d/connect client {:db-name "pici0044-5"})) ;; (config/config :source :db-name)}))
+(u/defn-memoized conn
+  [db]
+  (d/connect @client {:db-name db}))
 
 (defn query
   [db query args]              
-  (prn :query db query args)
-  (d/q {:query query :args (cons (d/db conn) args)}))
+  (d/q {:query query :args (cons (d/db (conn db)) args)}))
+
+(defn dbs
+  []
+  (d/list-databases @client {}))
+  

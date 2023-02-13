@@ -99,10 +99,17 @@
                     "candelabra-token" user-creds)]
         respon))))
 
+;;; Old CANDEL
+#_
 (defn handle-databases
   [req config]
   (let [candelabra-token (get-in req [:cookies "candelabra-token" :value])]
     (datomic/dbs candelabra-token config)))
+
+;;; Open CANDSL
+(defn handle-databases
+  [req config]
+  (datomic-client/dbs))
 
 (defn app-routes
   [config]
