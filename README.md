@@ -1,6 +1,6 @@
 # enflame
 
-A visual query interface for [CANDEL](https://www.parkerici.org/research-project/candel-data-analysis-platform/) and other graph databases.
+A visual query interface for [CANDEL](https://www.parkerici.org/research-project/candel-data-analysis-platform/) and other graph databases. See [this presentation](http://hyperphor.com/papers/enflame-clojure-meetup.pdf) for a description and rationale.
 
 
 # Theory of operation
