@@ -1,0 +1,17 @@
+* Scope of this document
+
+
+
+* Configuration
+
+* Deployment
+
+* AWS Services
+
+** Datomic Cloud
+
+** App Runner
+
+** ECR (Container Registry)
+
+** TODO storage service for library

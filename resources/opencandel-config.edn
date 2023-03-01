@@ -1,9 +1,9 @@
 {:source {:type :datomic-cloud                 ;The data source. 
           :config {:server-type :ion           ;Passed directly to Datomic Client API
                    :region "us-east-1" ;; e.g. us-east-1
-                   :system "PublicCANDEL"
+                   :system "PublicCANDEL5"
                    ;; :creds-profile "<your_aws_profile_if_not_using_the_default>"
-                   :endpoint "https://pepaga6o2e.execute-api.us-east-1.amazonaws.com/"}
+                   :endpoint "https://nazpex6ueb.execute-api.us-east-1.amazonaws.com"}
           }
 
  :schema "resources/candel-schema-1-3-1.edn" ;filename of an Alzabo schema
