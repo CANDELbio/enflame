@@ -18,7 +18,7 @@
             ;; :candel/wick
             ;; Library also temporarily out of service 
             ;; :share
-            :compact                    ;debug only
+            ;; :compact                    ;debug only
             :browser  
             ]
  :port 1996                             ;Port on which to serve application

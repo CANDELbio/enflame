@@ -6,12 +6,21 @@
 
 * Deployment
 
+Once App Runner is set up, pushing a new Docker image will restart the server.
+
+bin/build.sh does all the necessary steps
+
+
 * AWS Services
+
+These were all cobbled together by hand, I suppose the TODO is to make a CloudFormation them.
 
 ** Datomic Cloud
 
 ** App Runner
 
 ** ECR (Container Registry)
+
+** IAM 
 
 ** TODO storage service for library
