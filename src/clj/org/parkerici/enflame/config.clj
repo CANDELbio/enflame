@@ -3,6 +3,7 @@
             [clojure.edn :as edn]
             [clojure.pprint :as pprint]
             [org.parkerici.multitool.core :as u]
+            [clojure.java.io :as io]
             ))
 
 ;;; TODO Aero-ize
@@ -12,7 +13,7 @@
 (defn load-config
   [file]
   (let [env-config {} ; if we want to supply some config from environment
-        file-config (edn/read-string (slurp file))
+        file-config (edn/read-string (slurp (io/resource file)))
         config (merge env-config file-config)]
     (pprint/pprint config)
     (reset! the-config config)))
@@ -25,6 +26,7 @@
 ;;; TODO use version 
 (u/defn-memoized read-schema [version]
   (-> (config :schema)
+      io/resource
       slurp
       edn/read-string))
 

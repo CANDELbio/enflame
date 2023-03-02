@@ -6,10 +6,9 @@
                    :endpoint "https://nazpex6ueb.execute-api.us-east-1.amazonaws.com"}
           }
 
- :schema "resources/candel-schema-1-3-1.edn" ;filename of an Alzabo schema
+ :schema "candel-schema-1-3-1.edn"      ;filename of an Alzabo schema
 
- :library {:gcs-project :redacted       ;GCS Datastore project for storiing library entries
-           :gcs-console-url :redacted}
+ :library {}                            ;TODO need an AWS library solution
 
  :query-generator :candel-generate      ;The query generator
 
@@ -17,10 +16,11 @@
             :query
             ;; I guess no point to this until Wick server is brought up
             ;; :candel/wick
-            :share
+            ;; Library also temporarily out of service 
+            ;; :share
             :compact                    ;debug only
             :browser  
             ]
- :port 1997                             ;Port on which to serve application
+ :port 1996                             ;Port on which to serve application
  :dev? true                             ;debug only 
  }

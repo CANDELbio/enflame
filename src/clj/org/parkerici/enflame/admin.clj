@@ -3,6 +3,7 @@
             [org.parkerici.enflame.html :as html]
             [hiccup.util :as hu]
             [clojure.java.shell :as sh]
+            [org.parkerici.multitool.core :as u]
             ))
 
 (defn map-table
@@ -17,8 +18,9 @@
               (hu/escape-html (str (get map key))))]])]])
 
 (defn git-info []
-  {:commit (:out (sh/sh "git" "log" "-1" "--format=short"))
-   :branch (:out (sh/sh "git" "rev-parse" "--abbrev-ref" "HEAD"))})
+  (u/ignore-errors
+   {:commit (:out (sh/sh "git" "log" "-1" "--format=short"))
+    :branch (:out (sh/sh "git" "rev-parse" "--abbrev-ref" "HEAD"))}))
 
 (defn view
   [req]

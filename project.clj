@@ -91,6 +91,7 @@
              :css-dirs ["resources/public/css"]}
 
   :uberjar-name "enflame-standalone.jar"
+  :resource-paths ["resources"]
 
   :profiles
   {:dev

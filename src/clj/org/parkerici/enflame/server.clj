@@ -7,7 +7,7 @@
             [org.parkerici.enflame.schema :as schema]
             [org.parkerici.enflame.config :as config]
             [org.parkerici.enflame.oauth :as oauth]
-            [org.parkerici.enflame.gcs :as gcs]
+            [org.parkerici.enflame.library.core :as lib]
             [org.parkerici.enflame.library.item :as item]
             [org.parkerici.enflame.library.view :as library-view]
             [org.parkerici.multitool.core :as u]
@@ -63,13 +63,13 @@
 (defn handle-save
   [req]
   (let [item (get-in req [:params :item])
-        response (gcs/upload "EnflameItem" item item/big-keys)]
+        response (lib/upload item)]
     (response/response                  ;response^4
      {:response response})))
 
 (defn handle-get
   [key]
-  (let [item (item/localize-item (gcs/get-item "EnflameItem" (Long. key)))]
+  (let [item (item/localize-item (lib/get-item key))]
     ;; TODO handle not found
     (response/response item)))
 
