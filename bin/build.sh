@@ -5,6 +5,8 @@
 export VERSION=$(git rev-parse --short HEAD)
 echo Building version $VERSION
 
+bin/build-doc.sh
+
 # get latest version of schema (TODO: is this a good idea?)
 # doesn't seem to actually work
 # git submodule update --init --recursive
