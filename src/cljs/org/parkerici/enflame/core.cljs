@@ -8,7 +8,7 @@
    [org.parkerici.enflame.views :as views]
    [org.parkerici.enflame.db]
    [org.parkerici.enflame.config :as config]
-   org.parkerici.enflame.embed
+   [org.parkerici.enflame.embed :as embed]
    org.parkerici.enflame.schema-client
    ))
 
@@ -95,3 +95,12 @@
   (ag/init)
   )
 
+;;; This used to be in embed but that has dependency issues
+(defn ^:export embed
+  []
+    (config/init #(do
+                  (custom-init (config/config))
+                  (embed/re-frame-init)
+                  (embed/init-embed)
+                  ))
+  (ag/init))

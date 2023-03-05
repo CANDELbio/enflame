@@ -10,6 +10,11 @@ Once App Runner is set up, pushing a new Docker image will restart the server.
 
 bin/build.sh does all the necessary steps
 
+** Preconditions
+- Docker must be running
+- AWS cred must be in place
+- emacs available from shell
+
 
 * AWS Services
 
