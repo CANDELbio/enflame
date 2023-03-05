@@ -5,7 +5,7 @@
 export VERSION=$(git rev-parse --short HEAD)
 echo Building version $VERSION
 
-bin/build-doc.sh
+bin/build-guide.sh
 
 # get latest version of schema (TODO: is this a good idea?)
 # doesn't seem to actually work

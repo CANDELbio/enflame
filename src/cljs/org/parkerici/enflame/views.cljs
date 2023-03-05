@@ -336,7 +336,7 @@
     (toplink [:span [:b "Enflame "] [:img {:src "favicon.ico" :width "24px"}]] "http://github.com/ParkerICI/enflame")
     (toplink "Tutorial" "/doc/tutorial.html")
     (toplink "Doc" "/doc/guide.html")
-    (toplink "Schema" (str "/schema/" "" "/index.html")) ;TODO version
+    (toplink "Schema" (str "/schema/index.html")) ;TODO version
     (toplink "Library" "/library")]
 
    [:div#accordian.accordian

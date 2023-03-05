@@ -1,4 +1,3 @@
-
 (ns org.parkerici.enflame.core
   (:require
    [reagent.dom :as rdom]
