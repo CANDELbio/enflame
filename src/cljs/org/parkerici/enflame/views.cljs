@@ -333,11 +333,14 @@
   [:div {:style {:margin-top "10px"}}
    [:div
     ;; TODO customize these
-    (toplink [:span [:b "Enflame "] [:img {:src "favicon.ico" :width "24px"}]] "http://github.com/ParkerICI/enflame")
+    (toplink [:span [:b "Enflame "] [:img {:src "favicon.ico" :width "24px"}]] "http://github.com/CandelBio/enflame")
     (toplink "Tutorial" "/doc/tutorial.html")
     (toplink "Doc" "/doc/guide.html")
     (toplink "Schema" (str "/schema/index.html")) ;TODO version
-    (toplink "Library" "/library")]
+
+    (when (c/config :library :type)
+      (toplink "Library" "/library"))
+    ]
 
    [:div#accordian.accordian
     (for [card (c/config :rh-cards)] ;; cards TODO   not working yet because timing

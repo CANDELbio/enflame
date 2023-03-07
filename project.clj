@@ -75,12 +75,10 @@
   :min-lein-version "2.5.3"
   :main ^:skip-aot org.parkerici.enflame.core
 
-  ;; This builds and launches the CANDEL version
-  ;;; note: you have to fill out the config file in resources/candel-config.edn and put it in deploy folder
   :aliases {"launch" ["do"
                       "clean"
                       ["cljsbuild" "once" "prod"]
-                      ["run" "deploy/candel-config.edn"]]}
+                      ["run" "deploy/launch-config.edn"]]}
 
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
   :test-paths ["test/clj" "test/cljs" "test/cljc"]

@@ -1,5 +1,8 @@
 # Build Docker image
 
+# ID of AWS Elastic Container Registry
+export ECR=733151965047.dkr.ecr.us-east-1.amazonaws.com
+
 # TODO parameterize properly
 
 export VERSION=$(git rev-parse --short HEAD)
@@ -27,10 +30,10 @@ docker build -t cbio .
 # docker run -p 8080 cbio
 
 
-docker tag cbio:latest 733151965047.dkr.ecr.us-east-1.amazonaws.com/cbio:latest
+docker tag cbio:latest $ECR/cbio:latest
 
 # Upload to AWS repository
 
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 733151965047.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR
 
-docker push 733151965047.dkr.ecr.us-east-1.amazonaws.com/cbio:latest
+docker push $ECR/cbio:latest

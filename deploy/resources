@@ -1,0 +1,117 @@
+Note: this is a dump of relevant AWS resources (results trimmed to only include the OpenCANDEL relevant ones)
+
+
+14:49:59 ~/os/enflame (opencandel) ⪢ aws apprunner list-services
+{
+    "ServiceSummaryList": [
+        {
+            "ServiceName": "Enflame-OpenCANDEL",
+            "ServiceId": "68f5614bbe7248d2896d397b1e3b2033",
+            "ServiceArn": "arn:aws:apprunner:us-east-1:733151965047:service/Enflame-OpenCANDEL/68f5614bbe7248d2896d397b1e3b2033",
+            "ServiceUrl": "7gbxx4vxvn.us-east-1.awsapprunner.com",
+            "CreatedAt": "2023-03-01T16:01:27-08:00",
+            "UpdatedAt": "2023-03-01T16:01:27-08:00",
+            "Status": "RUNNING"
+        }
+    ]
+}
+
+15:03:07 ~/os/enflame (opencandel) ⪢ aws iam list-roles
+{
+    "Roles": [
+        {
+            "Path": "/",
+            "RoleName": "Enflame-OpenCANDEL",
+            "RoleId": "AROA2VM2DF53ZHMLN5XGO",
+            "Arn": "arn:aws:iam::733151965047:role/Enflame-OpenCANDEL",
+            "CreateDate": "2023-03-02T00:58:08+00:00",
+            "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "ec2.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "tasks.apprunner.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    }
+                ]
+            },
+            "Description": "Role for Enflame OpenCANDEL server",
+            "MaxSessionDuration": 3600
+        }
+    ]
+}
+
+
+
+14:52:19 ~/os/enflame (opencandel) ⪢ aws ecr describe-repositories
+{
+    "repositories": [
+
+        {
+            "repositoryArn": "arn:aws:ecr:us-east-1:733151965047:repository/cbio",
+            "registryId": "733151965047",
+            "repositoryName": "cbio",
+            "repositoryUri": "733151965047.dkr.ecr.us-east-1.amazonaws.com/cbio",
+            "createdAt": "2023-03-01T13:32:19-08:00",
+            "imageTagMutability": "MUTABLE",
+            "imageScanningConfiguration": {
+                "scanOnPush": false
+            },
+            "encryptionConfiguration": {
+                "encryptionType": "AES256"
+            }
+        }
+    ]
+}
+
+
+14:50:11 ~/os/enflame (opencandel) ⪢ aws cloudformation list-stacks
+{
+    "StackSummaries": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:733151965047:stack/PublicCANDEL5-Compute-93S9RT2L5TUI/bbcf46f0-b863-11ed-932d-0ab2700ca4cf",
+            "StackName": "PublicCANDEL5-Compute-93S9RT2L5TUI",
+            "TemplateDescription": "Creates compute resources needed to run Datomic.",
+            "CreationTime": "2023-03-01T19:03:21.404000+00:00",
+            "StackStatus": "CREATE_COMPLETE",
+            "ParentId": "arn:aws:cloudformation:us-east-1:733151965047:stack/PublicCANDEL5/0eee3a40-b863-11ed-9e49-1270ef971d67",
+            "RootId": "arn:aws:cloudformation:us-east-1:733151965047:stack/PublicCANDEL5/0eee3a40-b863-11ed-9e49-1270ef971d67",
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:733151965047:stack/PublicCANDEL5-StorageF7F305E7-UD47ELG33U9Z/134d9cc0-b863-11ed-b08e-128bb3d0467b",
+            "StackName": "PublicCANDEL5-StorageF7F305E7-UD47ELG33U9Z",
+            "TemplateDescription": "Creates storage resources needed to run Datomic.",
+            "CreationTime": "2023-03-01T18:58:38.643000+00:00",
+            "StackStatus": "CREATE_COMPLETE",
+            "ParentId": "arn:aws:cloudformation:us-east-1:733151965047:stack/PublicCANDEL5/0eee3a40-b863-11ed-9e49-1270ef971d67",
+            "RootId": "arn:aws:cloudformation:us-east-1:733151965047:stack/PublicCANDEL5/0eee3a40-b863-11ed-9e49-1270ef971d67",
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:733151965047:stack/PublicCANDEL5/0eee3a40-b863-11ed-9e49-1270ef971d67",
+            "StackName": "PublicCANDEL5",
+            "TemplateDescription": "Creates resources needed to run Datomic. The stack name is the name of the Datomic system.",
+            "CreationTime": "2023-03-01T18:58:31.189000+00:00",
+            "StackStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        },
+
+    ]
+}
+

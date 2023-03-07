@@ -22,7 +22,7 @@
 (defonce the-config (atom nil))
 
 (defn config
-  ([key] (get @the-config key))
+  ([& keys] (get-in @the-config keys))
   ([] @the-config ))
 
 ;;; Get the config from the server

@@ -1,0 +1,59 @@
+* Scope of this document
+
+This describes the simplified CANDEL/Enflame architecture used for the public CandelBIO website.
+
+* Deployment
+
+Once App Runner is set up, pushing a new Docker image will reboot the server.
+
+[[bin/build.sh]] does all the necessary steps
+
+** Preconditions
+- Docker must be running
+- AWS cred must be in place
+- emacs available from shell
+
+
+* AWS Services
+
+These were all cobbled together by hand, I suppose the TODO is to make a CloudFormation them. See [[deploy/resources]] for more details.
+
+** Datomic Cloud
+
+Launched from AWS Console: https://docs.datomic.com/cloud/getting-started/start-system.html
+
+This resuls in creating three CloudFormation stacks, one master and two subordinates.
+
+Current master is https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/stackinfo?filteringText=&filteringStatus=active&viewNested=true&stackId=arn%3Aaws%3Acloudformation%3Aus-east-1%3A733151965047%3Astack%2FPublicCANDEL5%2F0eee3a40-b863-11ed-9e49-1270ef971d67
+
+You need to copy the ClientApiGatewayEnpoint output to Enflame's configuration. The current value is https://nazpex6ueb.execute-api.us-east-1.amazonaws.com
+
+** ECR (Container Registry)
+
+
+This holds the Docker container that App Runner uses.
+
+Current instance: https://us-east-1.console.aws.amazon.com/ecr/repositories/private/733151965047/cbio?region=us-east-1
+
+The name of the most recent image is: 733151965047.dkr.ecr.us-east-1.amazonaws.com/cbio:latest
+This needs to be supplied to the build.sh script
+
+** IAM 
+
+Service role for App Runner
+
+https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/roles/details/Enflame-OpenCANDEL?section=permissions
+
+** App Runner
+
+App Runner service has to be configured with the 
+
+
+https://us-east-1.console.aws.amazon.com/apprunner/home?region=us-east-1#/services/dashboard?service_arn=arn%3Aaws%3Aapprunner%3Aus-east-1%3A733151965047%3Aservice%2FEnflame-OpenCANDEL%2F68f5614bbe7248d2896d397b1e3b2033&active_tab=logs
+
+Service: Enflame-OpenCANDEL
+Public endpint: https://7gbxx4vxvn.us-east-1.awsapprunner.com/
+
+
+
+** TODO storage service for library
