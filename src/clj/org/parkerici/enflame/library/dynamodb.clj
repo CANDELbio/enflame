@@ -8,29 +8,22 @@
 
 (def dyna (aws/client {:api :dynamodb}))
 
-(def table "OpenCANDEL_EnflameLibrary") ;TODO config
+(defn table
+  []
+  (config/config :library :table))
 
-;;; Delete the table
+;;; Delete the table – beware, data loss!
 (defn delete-table
   []
   (aws/invoke dyna
-              {:op      :DeleteTable
-               :request {:TableName             table}}))
-
-
-#_
-                         (mapv (fn [k]
-                                 {:AttributeName (name k)
-                                  :AttributeType "S"})
-                               (item/item-keys))
+              {:op :DeleteTable
+               :request {:TableName (table)}}))
 
 (defn create-table
   []
-  (u/ignore-report
-   (delete-table))
   (aws/invoke dyna
               {:op      :CreateTable
-               :request {:TableName             table
+               :request {:TableName             (table)
                          ;; Note: only key fields should be defined here
                          :AttributeDefinitions  [{:AttributeName "entityId"
                                                   :AttributeType "S"}
@@ -38,8 +31,7 @@
 
                          :KeySchema             [{:AttributeName "entityId"
                                                   :KeyType       "HASH"}
-                                                 #_ {:AttributeName "foo"
-                                                     :KeyType       "RANGE"}]
+                                                 ]
                          :ProvisionedThroughput {:ReadCapacityUnits  1
                                                  :WriteCapacityUnits 1}}}))
 
@@ -58,7 +50,7 @@
   []
   (map from-item
        (:Items
-        (aws/invoke dyna {:op :Scan :request {:TableName table}}))))
+        (aws/invoke dyna {:op :Scan :request {:TableName (table)}}))))
 
 (defn to-items
   [thing]
@@ -77,12 +69,12 @@
   (aws/invoke
    dyna
    {:op :PutItem
-    :request {:TableName table
+    :request {:TableName (table)
               :Item (to-items thing)}})  )
 
 (defn get-item
   [k]
-  (-> (aws/invoke dyna {:op :GetItem :request {:TableName table :Key {"entityId" {:S k}}}})
+  (-> (aws/invoke dyna {:op :GetItem :request {:TableName (table) :Key {"entityId" {:S k}}}})
       :Item
       from-item))
   
