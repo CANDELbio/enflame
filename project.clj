@@ -26,6 +26,8 @@
                  [ring-middleware-format "0.7.5" :exclusions [javax.xml.bind/jaxb-api]]
                  [bk/ring-gzip "0.3.0"]
                  [trptcolin/versioneer "0.2.0"]
+
+                 ;; Note: the gcs stuff is not going to used post PICI and could be removed. So annoying that it is hard to have different configs.
                  [com.google.cloud/google-cloud-datastore "1.105.7"
                   ;; TODO have Cognitect or someone review this
                   :exclusions [com.google.errorprone/error_prone_annotations
@@ -33,6 +35,11 @@
                                org.apache.httpcomponents/httpclient 
                                com.google.guava/guava
                                com.fasterxml.jackson.core/jackson-core]]
+
+                 [com.cognitect.aws/api "0.8.652"]
+                 [com.cognitect.aws/endpoints "1.1.12.415"]
+                 [com.cognitect.aws/dynamodb  "825.2.1262.0"]
+
                  [environ "1.1.0"]
                  [me.raynes/fs "1.4.6"]
                  [org.parkerici/multitool "0.0.26"]

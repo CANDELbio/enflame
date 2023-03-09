@@ -8,7 +8,9 @@
 
  :schema "candel-schema-1-3-1.edn"      ;filename of an Alzabo schema
 
- :library {}                            ;TODO need an AWS library solution
+ :library {:type :dynamodb
+           
+           }
 
  :query-generator :candel-generate      ;The query generator
 
@@ -16,8 +18,7 @@
             :query
             ;; I guess no point to this until Wick server is brought up
             ;; :candel/wick
-            ;; Library also temporarily out of service 
-            ;; :share
+            :share
             ;; :compact                    ;debug only
             :browser  
             ]
