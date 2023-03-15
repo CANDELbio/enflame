@@ -10,6 +10,7 @@
 
  :library {:type :dynamodb
            :table "OpenCANDEL_EnflameLibrary"
+           :console-url "https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#table?name=OpenCANDEL_EnflameLibrary"
            }
 
  :query-generator :candel-generate      ;The query generator

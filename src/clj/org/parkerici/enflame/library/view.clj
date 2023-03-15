@@ -36,8 +36,8 @@
   (html/html-frame
    "Library"
    [:div.container.col-12
-    [:a {:href (config/config :library :gcs-console-url)}
-     "Edit in GCS console"]
+    [:a {:href (config/config :library :console-url)}
+     "Edit in cloud console"]
     [:table.table
      [:tbody
       (for [item (reverse (sort-by ::item/date-created (library-items)))]

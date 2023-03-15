@@ -4,6 +4,9 @@
             [org.parkerici.multitool.core :as u]
             [clojure.string :as str]))
 
+;;; For dev
+;;; (schema/set-schema (org.parkerici.enflame.config/read-schema nil))
+
 ;;; ⊓⊔⊓⊔ Query logic ⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔
 
 (def varcounter (atom {}))

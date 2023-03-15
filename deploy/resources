@@ -1,4 +1,4 @@
-Note: this is a dump of relevant AWS resources (results trimmed to only include the OpenCANDEL relevant ones)
+Note: this is a dump of relevant AWS resources (results trimmed to only include the OpenCANDEL relevax`nt ones)
 
 
 14:49:59 ~/os/enflame (opencandel) ⪢ aws apprunner list-services
@@ -48,6 +48,40 @@ Note: this is a dump of relevant AWS resources (results trimmed to only include 
             "MaxSessionDuration": 3600
         }
     ]
+}
+
+
+
+18:23:09 ~/os/enflame (opencandel) ⪢ aws iam list-role-policies --role-name "Enflame-OpenCANDEL"
+{
+    "PolicyNames": [
+        "OpenCANDEL_Enflame_Library"
+    ]
+}
+
+
+
+18:22:49 ~/os/enflame (opencandel) ⪢ aws iam get-role-policy --role-name "Enflame-OpenCANDEL" --policy-name "OpenCANDEL_Enflame_Library"
+{
+    "RoleName": "Enflame-OpenCANDEL",
+    "PolicyName": "OpenCANDEL_Enflame_Library",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "VisualEditor0",
+                "Effect": "Allow",
+                "Action": [
+                    "dynamodb:PutItem",
+                    "dynamodb:GetItem",
+                    "dynamodb:Scan",
+                    "dynamodb:Query",
+                    "dynamodb:UpdateItem"
+                ],
+                "Resource": "arn:aws:dynamodb:us-east-1:733151965047:table/OpenCANDEL_EnflameLibrary"
+            }
+        ]
+    }
 }
 
 
@@ -115,3 +149,32 @@ Note: this is a dump of relevant AWS resources (results trimmed to only include 
     ]
 }
 
+20:25:31 ~/os/enflame (opencandel) ⪢ aws dynamodb describe-table --table-name "OpenCANDEL_EnflameLibrary"
+{
+    "Table": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "entityId",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "OpenCANDEL_EnflameLibrary",
+        "KeySchema": [
+            {
+                "AttributeName": "entityId",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": "2023-03-09T09:57:35.493000-08:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        },
+        "TableSizeBytes": 57488,
+        "ItemCount": 3,
+        "TableArn": "arn:aws:dynamodb:us-east-1:733151965047:table/OpenCANDEL_EnflameLibrary",
+        "TableId": "f29723c1-b287-48da-8c8b-6739caaed63e"
+    }
+}

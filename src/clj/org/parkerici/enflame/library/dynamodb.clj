@@ -8,6 +8,13 @@
 
 (def dyna (aws/client {:api :dynamodb}))
 
+(defn invoke-with-eh
+  [& args]
+  (let [resp (apply aws/invoke dyna args)]
+    (when (:cognitect.anomalies/category resp)
+      (throw (ex-info "DynamoDB exception" {:args args :resp resp})))
+    resp))
+
 (defn table
   []
   (config/config :library :table))
@@ -15,25 +22,25 @@
 ;;; Delete the table – beware, data loss!
 (defn delete-table
   []
-  (aws/invoke dyna
-              {:op :DeleteTable
-               :request {:TableName (table)}}))
+  (invoke-with-eh
+   {:op :DeleteTable
+    :request {:TableName (table)}}))
 
 (defn create-table
   []
-  (aws/invoke dyna
-              {:op      :CreateTable
-               :request {:TableName             (table)
-                         ;; Note: only key fields should be defined here
-                         :AttributeDefinitions  [{:AttributeName "entityId"
-                                                  :AttributeType "S"}
-                                                 ]
+  (invoke-with-eh
+   {:op      :CreateTable
+    :request {:TableName             (table)
+              ;; Note: only key fields should be defined here
+              :AttributeDefinitions  [{:AttributeName "entityId"
+                                       :AttributeType "S"}
+                                      ]
 
-                         :KeySchema             [{:AttributeName "entityId"
-                                                  :KeyType       "HASH"}
-                                                 ]
-                         :ProvisionedThroughput {:ReadCapacityUnits  1
-                                                 :WriteCapacityUnits 1}}}))
+              :KeySchema             [{:AttributeName "entityId"
+                                       :KeyType       "HASH"}
+                                      ]
+              :ProvisionedThroughput {:ReadCapacityUnits  1
+                                      :WriteCapacityUnits 1}}}))
 
 
 (defn from-item
@@ -50,9 +57,9 @@
   []
   (map from-item
        (:Items
-        (aws/invoke dyna {:op :Scan :request {:TableName (table)}}))))
+        (invoke-with-eh {:op :Scan :request {:TableName (table)}}))))
 
-(defn to-items
+(defn to-item
   [thing]
   (let [thang (assoc thing :entityId (str (java.util.UUID/randomUUID)))
         ks (keys thang)]
@@ -66,15 +73,14 @@
 
 (defn upload
   [thing]
-  (aws/invoke
-   dyna
+  (invoke-with-eh
    {:op :PutItem
     :request {:TableName (table)
-              :Item (to-items thing)}})  )
+              :Item (to-item thing)}})  )
 
 (defn get-item
   [k]
-  (-> (aws/invoke dyna {:op :GetItem :request {:TableName (table) :Key {"entityId" {:S k}}}})
+  (-> (invoke-with-eh dyna {:op :GetItem :request {:TableName (table) :Key {"entityId" {:S k}}}})
       :Item
       from-item))
   
