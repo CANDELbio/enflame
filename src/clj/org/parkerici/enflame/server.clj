@@ -43,7 +43,6 @@
         _query (read-string query)
         _args (if (u/nullish? args) [] (read-string args))
         _limit (if (u/nullish? limit) nil (Integer. limit))
-        candelabra-token (get-in req [:cookies "candelabra-token" :value])
         results #_ (datomic/query db _query _args candelabra-token config)
         (datomic-client/query db _query _args)
         clipped (if _limit (take _limit results) results)]
@@ -134,7 +133,7 @@
      (GET "/databases" req              ;TODO candel specific. Fold into schema
        (response/response (handle-databases req config)))
      (GET "/schema" [version]           ;TODO version ignored
-       (response/response (config/read-schema)))
+       (response/response @schema/the-schema))
      (GET "/query" req (handle-query req config))
      (context "/library" []
        (GET "/get" [key]

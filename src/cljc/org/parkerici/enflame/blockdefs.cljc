@@ -150,7 +150,7 @@
     {:message0 (str (name field) "? %1")
      :args0 [{:name "V"
               :type "field_dropdown"
-              :options '[["yes" true] ["no" false] ["defined" any]]}]
+              :options '[["yes" "true"] ["no" "false"] ["defined" "any"]]}]
      :query-builder :query-primitive-field}
     (:long :float)             
     {:message0 (str (name field) " %2 %1")

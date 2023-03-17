@@ -8,12 +8,19 @@
 
 (def dyna (aws/client {:api :dynamodb}))
 
+;;; Invoke with error handling
 (defn invoke-with-eh
-  [& args]
-  (let [resp (apply aws/invoke dyna args)]
+  [arg-map]
+  (let [resp (aws/invoke dyna arg-map)]
     (when (:cognitect.anomalies/category resp)
-      (throw (ex-info "DynamoDB exception" {:args args :resp resp})))
+      (throw (ex-info "DynamoDB exception" {:arg-map arg-map :resp resp})))
     resp))
+
+;;; When debugging, might want to Turn off the magic
+#_
+(defn invoke-with-eh
+  [arg-map]
+  (aws/invoke dyna arg-map))
 
 (defn table
   []
@@ -80,7 +87,7 @@
 
 (defn get-item
   [k]
-  (-> (invoke-with-eh dyna {:op :GetItem :request {:TableName (table) :Key {"entityId" {:S k}}}})
+  (-> (invoke-with-eh {:op :GetItem :request {:TableName (table) :Key {"entityId" {:S k}}}})
       :Item
       from-item))
   
