@@ -3,7 +3,7 @@
             [org.parkerici.enflame.test-utils :refer :all]
             [org.parkerici.enflame.candel.query :refer :all]))
 
-(use-fixtures :once with-schema)
+(use-fixtures :once with-test-config)
 
 (defn set= [a b]
   (and (= (set a) (set b))

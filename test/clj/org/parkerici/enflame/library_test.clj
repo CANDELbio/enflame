@@ -7,7 +7,7 @@
             [clojure.test :as t]))
 
 
-(use-fixtures :once with-schema)
+(use-fixtures :once with-test-config)
 
 ;;;  Turn off annoying print-map feature 
 (defmethod print-method clojure.lang.IPersistentMap [m, ^java.io.Writer w]
@@ -53,6 +53,7 @@
      :dquery
      {:find ((pull ?subject1 [:db/id :subject/id])), :where ([?subject1 :subject/id ?id1])}
      }
+
     {:query "[samples where [tumor-type is *]]",
      :compact
      {:type "sample_query",
@@ -87,8 +88,6 @@
        (pull ?meddra-disease1 [:db/id :meddra-disease/preferred-name])),
       :where
       ([?subject1 :subject/meddra-disease ?meddra-disease1])}}
-
-
 
     {:query "[samples where [gdc-anatomic-site is [gdc-anatomic-sites]]]",
      :compact

@@ -133,8 +133,8 @@
      (GET "/config" req (response/response (config/config)))
      (GET "/databases" req              ;TODO candel specific. Fold into schema
        (response/response (handle-databases req config)))
-     (GET "/schema" [version]     
-       (response/response (config/read-schema version)))
+     (GET "/schema" [version]           ;TODO version ignored
+       (response/response (config/read-schema)))
      (GET "/query" req (handle-query req config))
      (context "/library" []
        (GET "/get" [key]
