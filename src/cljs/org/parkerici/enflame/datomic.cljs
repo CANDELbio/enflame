@@ -3,8 +3,19 @@
             [org.parkerici.multitool.core :as u]
             [org.parkerici.enflame.api :as api]
             [org.parkerici.enflame.results :as results]
+            [clojure.walk :as walk]
             [cljs.reader :as reader]
             ))
+
+;;; Note: for some reason, transit is producing goog.long objectts instead of proper clojure longs. Can't figure out why, this patches the problem
+(defn fix-results
+  [r]
+  (walk/postwalk
+   (fn [x]
+     (if (.-low_ x)
+       (long x)
+       x))
+   r))
 
 ;;; TODO this isn't all that Datomic specific, maybe rename
 
@@ -21,7 +32,8 @@
   (api/ajax-get "/api/query"
                 (merge
                  {:url-params (u/clean-map {:db ddb :query (str query) :limit limit :args (str args)})
-                  :handler handler}
+                  :handler (fn [r]
+                             (handler (fix-results r)))}
                  (or options {}))))
 
 

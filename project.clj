@@ -36,7 +36,7 @@
                                com.google.guava/guava
                                com.fasterxml.jackson.core/jackson-core]]
 
-                 [com.cognitect.aws/api "0.8.652"]
+                 [com.cognitect.aws/api "0.8.656"]
                  [com.cognitect.aws/endpoints "1.1.12.415"]
                  [com.cognitect.aws/dynamodb  "825.2.1262.0"]
 
@@ -48,7 +48,9 @@
                  [org.clojure/clojurescript "1.10.520"]
 
                  [aristotle/aristotle "0.1.0"
-                  :exclusions [org.apache.jena/apache-jena-libs]] ;asking for trouble
+                  :exclusions [org.apache.jena/apache-jena-libs ;asking for trouble
+                               javax.xml.bind/jaxb-api
+                               ]] 
                  [org.apache.jena/apache-jena-libs "3.16.0" :extension "pom"]
                  [metasoarous/oz "1.6.0-alpha6" ; warning: later versions seem to have broken dependencies
                   :exclusions [cljsjs/vega      ; we insert a later version of Vega to fix some bugs
@@ -62,7 +64,7 @@
                  [cljsjs/vega-embed "6.19.0-0"]
                  [cljsjs/vega-tooltip "0.27.0-0"]
 
-                 [org.parkerici/blockoid "0.3.6"]
+                 [org.parkerici/blockoid "0.3.10"]
                  [reagent "0.8.1"]
                  [re-frame "0.10.9"
                   :exclusions [org.clojure/clojurescript]]
@@ -70,7 +72,7 @@
                  [cljsjs/ag-grid-enterprise "25.3.0-1"]
                  [inflections "0.13.2"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]
-                 [cljs-ajax "0.8.0"]]
+                 [cljs-ajax "0.8.4"]]
   :repositories [["github" {:url "https://maven.pkg.github.com/ParkerICI/mvn-packages"
                             :sign-releases false
                             :username :env/github_user
