@@ -49,7 +49,8 @@
 
                  [aristotle/aristotle "0.1.0"
                   :exclusions [org.apache.jena/apache-jena-libs ;asking for trouble
-                               javax.xml.bind/jaxb-api
+                               ;; TODO this fixed a problem with longs, but caused other issues...
+                               ; javax.xml.bind/jaxb-api
                                ]] 
                  [org.apache.jena/apache-jena-libs "3.16.0" :extension "pom"]
                  [metasoarous/oz "1.6.0-alpha6" ; warning: later versions seem to have broken dependencies
@@ -72,7 +73,7 @@
                  [cljsjs/ag-grid-enterprise "25.3.0-1"]
                  [inflections "0.13.2"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]
-                 [cljs-ajax "0.8.4"]]
+                 [cljs-ajax "0.8.0"]]
   :repositories [["github" {:url "https://maven.pkg.github.com/ParkerICI/mvn-packages"
                             :sign-releases false
                             :username :env/github_user
@@ -142,7 +143,8 @@
      :compiler     {:main            org.parkerici.enflame.core
                     :output-to       "resources/public/js/compiled/app.js"
                     :output-dir      "resources/public/js/compiled/outprod"
-                    :optimizations   :simple
-                    :infer-externs  true
+                    :asset-path      "js/compiled/outprod"
+                    :optimizations   :none ; was :simple but that stopped working for unknown reasons
+                    :infer-externs   true
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}]})

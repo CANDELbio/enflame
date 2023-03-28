@@ -18,7 +18,7 @@ bin/build-guide.sh
 # Run Alzabo to build schemas
 # cd alzabo; lein with-profile prod do clean, run documentation candel "*", cljsbuild once; cd ..
 
-lein uberjar
+lein do clean, uberjar
 
 # TODO abort if lein fails, duh. 
 
