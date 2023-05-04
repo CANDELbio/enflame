@@ -14,6 +14,7 @@
    [org.parkerici.enflame.candel.query :as query] ;TOODO
    [org.parkerici.enflame.datomic :as datomic]
    [org.parkerici.enflame.view.candel-cards :as candel]
+   [org.parkerici.enflame.view.card.sparql :as sparql] ;TODO other cards in this namespace
    [org.parkerici.enflame.view.library :as library]
    )
   )
@@ -127,6 +128,8 @@
   ;; Sort is not quite what you want, but without it the columns of different entities get jumbled
   (let [cols (sort @(rf/subscribe [:display-columns]))
         idents @(rf/subscribe [:idents])
+        ;; Note: data can only contain prims, maps, vectors
+        ;; Keywords get turned into strings
         data @(rf/subscribe [:results])
         ;; First non-null value in column
         sample-value (fn [col] (some #(col %) data))]
@@ -258,7 +261,8 @@
        [:button.btn.btn-primary.m-1
         {:class (if left? "float-left" "float-right")
          :on-mouse-down #(rf/dispatch [:do-query query])
-         :disabled (not (nil? @(rf/subscribe [:query-invalid?])))
+         ;; TODO get this working again
+         ;; :disabled   (boolean @(rf/subscribe [:query-invalid?]))
          :data-toggle "tooltip"
          ;; TODO add the js necessary to make this pretty (not sure it's worth it) (also see tooltip in Library pane)
          ;;          :data-placement "top"
@@ -296,6 +300,8 @@
 (rf/reg-sub
  :query-invalid?
  (fn [_ _]
+  false
+   #_                                   ;TODO CANDEL Specific
    (let [query @(rf/subscribe [:query])
          query-block @(rf/subscribe [:query-block])]
      (cond 
@@ -320,10 +326,12 @@
    :candel/wick candel/wick-card
    :query query-card
    :compact compact-card
+   :compacted compact-card              ;temp
    :xml xml-card
    :share library/share-card
    :browser obrowser/browser
-   :graph graph-pane})
+   :graph graph-pane
+   :sparql sparql/card})
 
 (defn rh-panel
   []
@@ -337,6 +345,10 @@
     (toplink "Library" "/library")]
 
    [:div#accordian.accordian
-    (for [card (c/config :rh-cards)] ;; cards TODO   not working yet because timing
-      ^{:key card}[(get card-defs card)])
+    (for [card (c/config :rh-cards)
+          :let [cdef (get card-defs card)]]
+      (if cdef
+        ^{:key card}[cdef]
+        (throw (ex-info "No card defined for" {:card card}))
+        ))
     ]])

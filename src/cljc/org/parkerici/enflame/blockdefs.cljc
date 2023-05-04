@@ -78,6 +78,8 @@
 
 (defn kind-color [kind]
   (or (kind-defined-color kind)
+      ;; Crock, makes uniprot use Candel-compatible colors for common classes
+      (kind-defined-color (keyword (clojure.string/lower-case (name kind))))
       ;; Will do something vaguely reasonable for unknown kinds (TODO would be good to control the color a bit)
       (str "#" (u/hex-string (mod (hash kind) 0xffffff)))))
 
@@ -223,7 +225,7 @@
 (defn kind-field-blockdef
   [kind field invert?]
   (let [{:keys [type attribute]} (if invert? ;??? not sure about this
-                                   {:type field :attribute (keyword field kind)}
+                                   {:type field :attribute (keyword (name field) (name kind))}
                                    (field-def kind field))]
     (when-let [field-def (field-def-type field type)]
       (merge

@@ -12,8 +12,10 @@
 
 ;;; Not clear what Aristotle does that isn't better handled by Jena SSE https://jena.apache.org/documentation/notes/sse.html
 
+;;; Warning: needs to be at lease 2700 for uniprot ontology query
+(def sparql-default-limit 3000)         ;Sanity preservation. 
 
-(defn ->sparql [bgp & {:keys [limit]}]
+(defn ->sparql [bgp & {:keys [limit] :or {limit sparql-default-limit}}]
   (let [query (-> bgp
                   q/build
                   org.apache.jena.sparql.algebra.OpAsQuery/asQuery)]
@@ -54,6 +56,7 @@
   (let [bindings (.getBinding rb)
         vars (iterator-seq (.vars bindings))]
     (zipmap (map #(keyword (.getVarName %)) vars)
+            ;; graph/data turns URIs into keywords, TODO might want to not do that, we end up throwing that away for the client-side operations
             (map #(graph/data (.get bindings %)) vars))))
 
 (defn do-query [source q]
@@ -83,8 +86,9 @@
 
 ;;; Searching for usable endpoints
 
-(def sparql-dbs (clojure.data.json/read-str (slurp "/Users/mtravers/Downloads/query (1).json")
-                                            :key-fn keyword))
+(def sparql-dbs
+  (clojure.data.json/read-str (slurp "scrap/sparql-endpoints.json")
+                              :key-fn keyword))
 
 
 (defn check-link
@@ -201,6 +205,12 @@
     (do-query (sparql-source endpoint) sparql)
     (q endpoint (->sparql sparql))))
 
+(defn ^:api describe
+  [endpoint ent]
+  (concat
+    (q endpoint `(:bgp [~ent ?p ?o]))
+    (q endpoint `(:bgp [?s ?p ~ent]))))
+
 
 (defn ontology-query
   [endpoint]
@@ -279,6 +289,14 @@
     `(:bgp [?s ~att ?o]))
   )
 
+(defn parse-sparql
+  "Parse SPARQL query into Jena sexp form. "
+  [sparql]
+  (read-string (str (q/parse sparql))))
+
+#_
+(parse-sparql  "select ?a ?b ?c where {?a ?b ?c}")
+
 
 (comment 
 ;;; Look here for examples
@@ -292,4 +310,37 @@
 (def x (sq/q endpoint
              '(:distinct (:project [?o] (:bgp [?s :rdf/type  :prokino/LigandActivity]
                                               [?s :prokino/hasMOA ?o])))))
-)
+
+
+;;; Not implemented??
+(q '[:conditional [:bgp [:uniprot/organism :rdfs/domain ?d1] [?d1 ?p1 ?d2] [?d2 ?p2 ?d3]] [:bgp [?d3 ?p3 ?d4]]]))
+
+
+
+
+
+
+;;; Convert a namespaced keyword to a proper node
+(defn node
+  [kw]
+  (arachne.aristotle.graph/node kw))
+
+(defn uri
+  [kw]
+  (.getURI (node kw)))
+
+;;; Replace :uniprot/Foo with their real URL
+;;; Also fix dates and any other unserializable values
+(defn tweak-results                    
+  [results]
+  (clojure.walk/prewalk
+   #(cond (and (keyword? %)
+               (namespace %))
+          (str "<" (uri %) ">")                          
+          ;; TODO any other unserializable types?
+          (instance? org.apache.jena.datatypes.xsd.XSDDateTime %)
+          (str %)
+          :else
+          %)
+   results))
+

@@ -1,13 +1,25 @@
-{:source {:type :sparql
-          :sparql-endpoint "https://sparql.uniprot.org/"}
+{:requires [org.parkerici.enflame.uniprot]
+ :source {:type :sparql
+          :sparql-endpoint "https://sparql.uniprot.org/"
+          ;; TODO implement
+          :prefixes {uniprot "http://purl.uniprot.org/core/"
+                     unipath "http://purl.uniprot.org/unipathway/"
+                     unicite "http://purl.uniprot.org/citations/"
+                     unidb "http://purl.uniprot.org/database"
+                     dcterms "http://purl.org/dc/terms/"
+                     unienzyme "http://purl.uniprot.org/enzyme/"
+                     skos "http://www.w3.org/2004/02/skos/core#"
+                     }
+          }
  :schema "resources/uniprot-alzabo.edn" 
  :query-generator :sparql-generate
  :port 1992
  :dev? true                             ;TODO control this somehow maybe aero/env
  :rh-cards [:query
+            :sparql
             #_ :share
-            :compacted                  ;debug only
-            #_ :browser                    ;someday
+            :compact                  ;debug only
+            :browser                    ;someday
             ]
 
  }

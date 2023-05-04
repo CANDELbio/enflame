@@ -5,12 +5,21 @@
             [clojure.string :as str])
   )
 
-
+#_
+(schema/set-schema (org.parkerici.enflame.config/read-schema nil))
 
 
 ;;; Pasted from candel and should be folded
 
 (def varcounter (atom {}))
+
+(defn s [thing]
+  (or (u/safe-name thing)
+      (str thing)))
+
+(defn symbol-conc
+  [& things]
+  (symbol (apply str (map s things))))
 
 (defn ?var [kind]
   (swap! varcounter update kind #(inc (or % 0)))
@@ -46,14 +55,16 @@
 
 ;;; From CANDEL, but modified
 
+#_
 (defn pull-include
   [var]
   (let [kind (var-kind var)
-        label (schema/kind-label kind)]
+        label (kind-label kind)]
     (if label
       [:db/id label]
       [:db/id])))
 
+#_
 (defn find-term
   [var type]
   (u/de-ns
@@ -66,10 +77,24 @@
 
 
 
+(defn label-var
+  [base-var]
+  (symbol-conc base-var "Label"))
+
+
+
+(defn select-terms
+  [var type]
+   (case (or type :include)             ;default is :include
+     :omit nil
+     :include (list var (label-var var))
+     :count `(count-distinct ~var)      ;TODO
+     ))
+
 ;;; Actual
 
 ;;; TODO copypasta from candel.query, could be abstracted up
-(defmulti build-query (fn [_ blockspec]
+(defmulti build-query (fn [x blockspec]
                         (-> blockspec
                             :type
                             blockdefs/block-def
@@ -82,9 +107,9 @@
 
 (defn build-top-query
   [blockspec]
-  #_ (reset-vars)
+  (reset-vars)
   (when blockspec
-    (let [{:keys [filter where select] :as built}
+    (let [{:keys [filter where find] :as built}
           (build-query {} (assoc blockspec :top? true))
           base `(:bgp ~@where)
           filtered (if-not (empty? filter)
@@ -92,7 +117,7 @@
                               ~base)
                      base)
           ;; TODO throwing away pulls, need to implement those some other way
-          vars (map #(if (seq? %) (second %) %) select)
+          vars (distinct (map #(if (seq? %) (second %) %) find))
           ]
       (reset! tap built)
       ;; TODO
@@ -104,6 +129,10 @@
       :type
       blockdefs/block-def))
 
+(defn kind-label
+  [kind]
+  (get-in (schema/kind-def kind) [:fields :label :uri]))
+
 (defmethod build-query :query-builder-query
   [{:keys [current-var] :as _query} {:keys [top?] :as blockspec}]
   (let [{:keys [output]} (spec-block-def blockspec)
@@ -114,45 +143,46 @@
         ;; Not rdf/type, its pull etc
         output-type (keyword (get-in blockspec [:children "output"])) ;oneof :include :pull :count etc.
         subqueries (map (partial build-query {:current-var output-var}) constraints)
-        subquery-selects (mapcat :select subqueries)
+        subquery-selects (mapcat :find subqueries)
         subquery-wheres (mapcat :where subqueries)
         type-where `[~output-var :rdf/type ~output-rdf-type]
+        base-wheres (cons type-where subquery-wheres)
         subquery-filters (mapcat :filter subqueries)
         base-query
-        ;; Do not understand this
-        {:select (if-let [term (find-term output-var output-type)]
-                 (conj subquery-selects term)
-                 subquery-selects)
+        {:find (concat (select-terms output-var output-type)
+                       subquery-selects)
          :where (if-let [label-attribute
-                         (and top?
-                              (empty? subquery-wheres)
-                              (schema/kind-label output))]
-                  [[output-var label-attribute (?var label-attribute)]] ;TODO not sure about this
-                  (cons type-where subquery-wheres))
+                         (and ;; top?
+                          ;; (empty? subquery-wheres)
+                          (kind-label output))]
+                  (cons [output-var label-attribute (label-var output-var)] base-wheres)
+                  base-wheres)
          :filter subquery-filters
          :current-var output-var
          }]
     base-query))
 
-
 (defmethod build-query :query-text-field
   [{:keys [current-var] :as query} blockspec]
   (let [{:keys [attribute] :as blockdef} (spec-block-def blockspec)
         value (query-value blockspec blockdef "V") 
-        var (?var (:attribute blockdef)) ;may not be used and uses up a number...
-        comp (query-value blockspec blockdef "comp")]
+        var (if (= "label %2 %1" (:message0 blockdef)) ;TODO kludge – better to put :label in blockdef somewher
+              (label-var current-var)
+              (?var (:attribute blockdef)))
+        comp (keyword (query-value blockspec blockdef "comp"))]
     ;; would be better expressed with merge-recursive
     (-> query
         (update :where concat
                 (cond (= value :any)
                       [[current-var attribute var]]
                       (= comp :is)
-                      [[current-var attribute value]]
+                      [[current-var attribute value]
+                       [current-var attribute var]] ;we also need this, so label gets included in result set and transmitted to client.  
                       :else             ;its a regex of some kind
                       [[current-var attribute var]])
                 )
         (update :filter concat
-                (when true ; -not (= comp :is)
+                (when-not (= comp :is)
                   (u/de-ns
                    `[(regex ~var ~(generate-regex comp value) "")])))
 
