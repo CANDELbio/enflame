@@ -1,27 +1,33 @@
 (defproject enflame "0.0.29-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.10.1"]
-                 [clj-http "3.12.1"
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [clj-http "3.12.3"
                   :exclusions [commons-codec]]
-                 [cheshire "5.10.0"]
+                 [cheshire "5.11.0"]
+
+                 [com.datomic/client-cloud "1.0.122"]
 
                  ;; Ring and its large family
-                 [org.eclipse.jetty/jetty-client "9.4.12.v20180830"] ;has to match ring version of jetty
-                 [org.eclipse.jetty/jetty-server "9.4.12.v20180830"]
-                 [org.eclipse.jetty/jetty-http "9.4.12.v20180830"]
-                 [org.eclipse.jetty/jetty-util "9.4.12.v20180830"]
+                 [org.eclipse.jetty/jetty-client "9.4.48.v20220622"] ;has to match ring version of jetty
+                 [org.eclipse.jetty/jetty-server "9.4.48.v20220622"]
+                 [org.eclipse.jetty/jetty-http "9.4.48.v20220622"]
+                 [org.eclipse.jetty/jetty-util "9.4.48.v20220622"]
 
-                 [ring "1.8.0"]
-                 [ring/ring-jetty-adapter "1.7.1"]
-                 [ring/ring-defaults "0.3.2"]
-                 [ring-logger "1.0.1"]
-                 [ring-oauth2 "0.1.4"]
+                 [ring "1.9.6"]
+                 [ring/ring-jetty-adapter "1.9.6"]
+                 [ring/ring-defaults "0.3.4"]
+                 [ring-logger "1.1.1"]
+                 [ring-oauth2 "0.2.0" :exclusions [org.apache.httpcomponents/httpcore]]
                  [org.slf4j/slf4j-simple "1.7.26"]                   ;required to turn off warning
-                 [com.taoensso/timbre "4.10.0"]
+                 [io.aviso/pretty "1.3"]
+                 [com.taoensso/timbre "4.10.0"
+                  :exclusions [io.aviso/pretty]]
                  [org.clojure/data.csv "0.1.4"]
                  [compojure "1.6.1" :exclusions [ring.core ring.codec]]
-                 [ring-middleware-format "0.7.4" :exclusions [javax.xml.bind/jaxb-api]]
+                 [ring-middleware-format "0.7.5" :exclusions [javax.xml.bind/jaxb-api]]
                  [bk/ring-gzip "0.3.0"]
                  [trptcolin/versioneer "0.2.0"]
+
+                 ;; Note: the gcs stuff is not going to used post PICI and could be removed. So annoying that it is hard to have different configs.
                  [com.google.cloud/google-cloud-datastore "1.105.7"
                   ;; TODO have Cognitect or someone review this
                   :exclusions [com.google.errorprone/error_prone_annotations
@@ -29,27 +35,37 @@
                                org.apache.httpcomponents/httpclient 
                                com.google.guava/guava
                                com.fasterxml.jackson.core/jackson-core]]
+
+                 [com.cognitect.aws/api "0.8.656"]
+                 [com.cognitect.aws/endpoints "1.1.12.415"]
+                 [com.cognitect.aws/dynamodb  "825.2.1262.0"]
+
                  [environ "1.1.0"]
                  [me.raynes/fs "1.4.6"]
-                 [org.parkerici/multitool "0.0.19"]
+                 [org.parkerici/multitool "0.0.26"]
                  [com.cemerick/url "0.1.1"]
                  [org.clojure/data.xml "0.2.0-alpha6"]
                  [org.clojure/clojurescript "1.10.520"]
 
                  [aristotle/aristotle "0.1.0"
-                  :exclusions [org.apache.jena/apache-jena-libs]] ;asking for trouble
+                  :exclusions [org.apache.jena/apache-jena-libs ;asking for trouble
+                               ;; TODO this fixed a problem with longs, but caused other issues...
+                               ; javax.xml.bind/jaxb-api
+                               ]] 
                  [org.apache.jena/apache-jena-libs "3.16.0" :extension "pom"]
                  [metasoarous/oz "1.6.0-alpha6" ; warning: later versions seem to have broken dependencies
                   :exclusions [cljsjs/vega      ; we insert a later version of Vega to fix some bugs
                                cljsjs/vega-lite
                                cljsjs/vega-embed
-                               cljsjs/vega-tooltip]]
+                               cljsjs/vega-tooltip
+                               com.taoensso/encore]]
+                  
                  [cljsjs/vega "5.20.2-0"]
                  [cljsjs/vega-lite "5.1.1-0"]
                  [cljsjs/vega-embed "6.19.0-0"]
                  [cljsjs/vega-tooltip "0.27.0-0"]
 
-                 [org.parkerici/blockoid "0.3.6"]
+                 [org.parkerici/blockoid "0.3.10"]
                  [reagent "0.8.1"]
                  [re-frame "0.10.9"
                   :exclusions [org.clojure/clojurescript]]
@@ -69,12 +85,10 @@
   :min-lein-version "2.5.3"
   :main ^:skip-aot org.parkerici.enflame.core
 
-  ;; This builds and launches the CANDEL version
-  ;;; note: you have to fill out the config file in resources/candel-config.edn and put it in deploy folder
   :aliases {"launch" ["do"
                       "clean"
                       ["cljsbuild" "once" "prod"]
-                      ["run" "deploy/candel-config.edn"]]}
+                      ["run" "deploy/launch-config.edn"]]}
 
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
   :test-paths ["test/clj" "test/cljs" "test/cljc"]
@@ -85,6 +99,7 @@
              :css-dirs ["resources/public/css"]}
 
   :uberjar-name "enflame-standalone.jar"
+  :resource-paths ["resources"]
 
   :profiles
   {:dev
@@ -128,7 +143,8 @@
      :compiler     {:main            org.parkerici.enflame.core
                     :output-to       "resources/public/js/compiled/app.js"
                     :output-dir      "resources/public/js/compiled/outprod"
-                    :optimizations   :simple
-                    :infer-externs  true
+                    :asset-path      "js/compiled/outprod"
+                    :optimizations   :none ; was :simple but that stopped working for unknown reasons
+                    :infer-externs   true
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}]})

@@ -5,7 +5,7 @@
             [org.parkerici.enflame.schema :as schema]
             ))
 
-(use-fixtures :once with-schema)
+(use-fixtures :once with-test-config)
 
 (deftest blockdef-test
   (testing "blockdefs for single kind (subject)"

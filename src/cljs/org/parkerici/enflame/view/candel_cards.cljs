@@ -15,14 +15,15 @@
 ;;; Hm. Haven't really been designing with that in mind but it could work.
 (defn db-card []
   [vu/card "DB"
-  [:div
-   [:select.form-control 
-    {:name "ddb"
-     :style {:width "100%"}
-     :on-change #(rf/dispatch [:set-ddb (-> % .-target .-value)])
-     :value (or @(rf/subscribe [:ddb]) "")}
-    (for [db @(rf/subscribe [:ddbs])]
-      [:option {:key db :value db} db])]]])
+   [:div
+    [:select.form-control 
+     {:name "ddb"
+      :style {:width "100%"}
+      :on-change #(rf/dispatch [:set-ddb (-> % .-target .-value)])
+      :value (or @(rf/subscribe [:ddb]) "")}
+     (for [db @(rf/subscribe [:ddbs])]
+       [:option {:key db :value db} db])]]
+   :header-extra [:span.float-right2.h4 @(rf/subscribe [:ddb])]])
 
 (defn wick-card
   []

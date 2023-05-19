@@ -1,12 +1,13 @@
 (ns org.parkerici.enflame.server
   (:require [org.parkerici.enflame.datomic-relay :as datomic]
+            [org.parkerici.enflame.datomic-client :as datomic-client]
             [org.parkerici.enflame.download :as download]
             [org.parkerici.enflame.embed-server :as embed]
             [org.parkerici.enflame.admin :as admin]
             [org.parkerici.enflame.schema :as schema]
             [org.parkerici.enflame.config :as config]
             [org.parkerici.enflame.oauth :as oauth]
-            [org.parkerici.enflame.gcs :as gcs]
+            [org.parkerici.enflame.library.core :as lib]
             [org.parkerici.enflame.library.item :as item]
             [org.parkerici.enflame.library.view :as library-view]
             [org.parkerici.multitool.core :as u]
@@ -42,8 +43,8 @@
         _query (read-string query)
         _args (if (u/nullish? args) [] (read-string args))
         _limit (if (u/nullish? limit) nil (Integer. limit))
-        candelabra-token (get-in req [:cookies "candelabra-token" :value])
-        results (datomic/query db _query _args candelabra-token config)
+        results #_ (datomic/query db _query _args candelabra-token config)
+        (datomic-client/query db _query _args)
         clipped (if _limit (take _limit results) results)]
     (response/response
      {:count (count results) :clipped (count clipped) :results clipped})))
@@ -61,13 +62,13 @@
 (defn handle-save
   [req]
   (let [item (get-in req [:params :item])
-        response (gcs/upload "EnflameItem" item item/big-keys)]
+        response (lib/upload item)]
     (response/response                  ;response^4
      {:response response})))
 
 (defn handle-get
   [key]
-  (let [item (item/localize-item (gcs/get-item "EnflameItem" (Long. key)))]
+  (let [item (item/localize-item (lib/get-item key))]
     ;; TODO handle not found
     (response/response item)))
 
@@ -97,10 +98,17 @@
                     "candelabra-token" user-creds)]
         respon))))
 
+;;; Old CANDEL
+#_
 (defn handle-databases
   [req config]
   (let [candelabra-token (get-in req [:cookies "candelabra-token" :value])]
     (datomic/dbs candelabra-token config)))
+
+;;; Open CANDSL
+(defn handle-databases
+  [req config]
+  (datomic-client/dbs))
 
 (defn app-routes
   [config]
@@ -124,8 +132,8 @@
      (GET "/config" req (response/response (config/config)))
      (GET "/databases" req              ;TODO candel specific. Fold into schema
        (response/response (handle-databases req config)))
-     (GET "/schema" [version]     
-       (response/response (config/read-schema version)))
+     (GET "/schema" [version]           ;TODO version ignored
+       (response/response @schema/the-schema))
      (GET "/query" req (handle-query req config))
      (context "/library" []
        (GET "/get" [key]
@@ -141,7 +149,7 @@
 (def site-defaults
   (-> middleware/site-defaults
       (assoc-in [:security :anti-forgery] false)          ;interfering with save?
-      (assoc-in [:session :cookie-attrs :same-site] :lax) ;for oauth
+      #_ (assoc-in [:session :cookie-attrs :same-site] :lax) ;for oauth
       (assoc-in [:session :store] common-store)
       (assoc-in [:static :resources] nil)))                 ;this needs to go after oauth
 
@@ -159,7 +167,7 @@
                    (when-not (some #(= % (:uri message)) no-log)
                      (log/log level throwable message)))})
        (wrap-resource "public" {:allow-symlinks? true})
-       (oauth/wrap-oauth config)
+       #_ (oauth/wrap-oauth config)
        (middleware/wrap-defaults site-defaults)
        wrap-exception-handling
        wrap-restful-format

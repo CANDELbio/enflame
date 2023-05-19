@@ -36,6 +36,10 @@
   [k]
   (get-in @the-schema [:kinds k :fields]))
 
+(defn kind-field
+  [k f]
+  (get-in @the-schema [:kinds k :fields f]))
+
 (defn kind? [k]
   (contains? (:kinds @the-schema) k))
 

@@ -1,4 +1,3 @@
-
 (ns org.parkerici.enflame.core
   (:require
    [reagent.dom :as rdom]
@@ -9,7 +8,7 @@
    [org.parkerici.enflame.views :as views]
    [org.parkerici.enflame.db]
    [org.parkerici.enflame.config :as config]
-   org.parkerici.enflame.embed
+   [org.parkerici.enflame.embed :as embed]
    org.parkerici.enflame.schema-client
    ))
 
@@ -68,6 +67,23 @@
       (rf/dispatch [:dispatch-when :schema [:library-load library]])))
   )
 
+;;; This is identitical to :candel (for now)
+(defmethod custom-init :datomic-cloud
+  [_]
+  (rf/dispatch [:get-ddbs])            
+  (let [{:keys [library ddb query] :as _params} (browser/url-params)]
+    (if-let [ddb (or ddb (config/get-local :ddb))]
+      (rf/dispatch [:set-ddb ddb])
+      (rf/dispatch [:set-schema]))
+    (when query
+      ;; Wait for schema to be set
+      (rf/dispatch [:dispatch-when :schema [:set-query query]]))
+    ;; NOt really CANDEL specifica
+    (when library
+      ;; Wait for schema to be set
+      (rf/dispatch [:dispatch-when :schema [:library-load library]])))
+  )
+
 
 (defn ^:export init
   []
@@ -79,3 +95,12 @@
   (ag/init)
   )
 
+;;; This used to be in embed but that has dependency issues
+(defn ^:export embed
+  []
+    (config/init #(do
+                  (custom-init (config/config))
+                  (embed/re-frame-init)
+                  (embed/init-embed)
+                  ))
+  (ag/init))

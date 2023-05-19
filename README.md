@@ -24,11 +24,11 @@ See [sample config](resources/candel-config.edn)
 
 ## To run locally from source:
 
-Copy `resources/candel-config.edn` to `deploy/candel-config.edn`, filling out as appropriate.
+Create the file `deploy/launch-config.edn` according to your needs (see the sample configs in `resources`). Then:
 
     lein launch
 
-This will compile the front-end, lauch a server, and open a browser windoe.
+This will compile the front-end, lauch the back-end, and open a browser windoe.
 
 ## Documentation generation
 

@@ -1,0 +1,18 @@
+;;; TODO Use aero to default to resources/candel-config.edn
+{:source {:type :candel
+          :candelabra-endpoint "https://pici-prod-v1.candel.parkerici.org/"
+          :insecure-https false}
+ :schema "resources/candel-schema-1-3-1.edn"
+ :query-generator :candel-generate
+ :library {:gcs-project "pici-dev"
+           :gcs-console-url "https://console.cloud.google.com/datastore/entities;kind=EnflameItem;ns=__$DEFAULT$__;sortCol=date-created;sortDir=DESCENDING/query/kind?project=pici-dev"}
+ :rh-cards [:candel/db
+            :query
+            :candel/wick
+            :share
+            :compact                  ;debug only
+            :browser  
+            ]
+ :dev? true                             ;TODO control this somehow maybe aero/env
+ :port 1983
+ }

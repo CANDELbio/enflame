@@ -8,6 +8,7 @@
    [org.parkerici.enflame.views :as views]
    [org.parkerici.enflame.view.graph :as graph]
    [org.parkerici.enflame.db]
+   [org.parkerici.enflame.config :as config]
    ))
 
 ;;; Alternative to core for embedded
@@ -47,15 +48,14 @@
                   "data" views/results})
      (views/results))])
 
-(defn ^:export re-frame-init
+(defn re-frame-init
   []
   (rf/dispatch-sync [:initialize-db])
   (rf/clear-subscription-cache!))
 
 ;; Probably this would be better if blockly was a real react component.
-(defn ^:export init
+(defn init-embed
   []
-  (re-frame-init)
   (let [{:keys [ddb query view rows] :as _params} (browser/url-params)]
     (let [blockly-id "blocklyEmbed"
           results-id "results"

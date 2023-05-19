@@ -31,7 +31,7 @@
          [:div.scrollbar.scrollbar-primary {:style {:height "300px" :width "100%" :overflow-y "scroll"}}
           [:div#results.force-overflow]]]]
        [:script {:src "js/compiled/app.js"}]]
-      [:script "org.parkerici.enflame.embed.init();"]
+      [:script "org.parkerici.enflame.core.embed();"]
       ]))
    "text/html"))
 

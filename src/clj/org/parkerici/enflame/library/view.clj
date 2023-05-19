@@ -1,6 +1,7 @@
 (ns org.parkerici.enflame.library.view
   (:require [org.parkerici.enflame.html :as html]
             [org.parkerici.enflame.gcs :as gcs]
+            [org.parkerici.enflame.library.core :as lib]
             [org.parkerici.enflame.library.item :as item]
             [org.parkerici.enflame.config :as config]
             [org.parkerici.multitool.core :as u]
@@ -28,15 +29,15 @@
 
 (defn library-items
   []
-  (map item/localize-item (gcs/list-items "EnflameItem")))
+  (map item/localize-item (lib/list-items)))
 
 (defn view
   []
   (html/html-frame
    "Library"
    [:div.container.col-12
-    [:a {:href (config/config :library :gcs-console-url)}
-     "Edit in GCS console"]
+    [:a {:href (config/config :library :console-url)}
+     "Edit in cloud console"]
     [:table.table
      [:tbody
       (for [item (reverse (sort-by ::item/date-created (library-items)))]

@@ -150,7 +150,7 @@
     {:message0 (str (name field) "? %1")
      :args0 [{:name "V"
               :type "field_dropdown"
-              :options [["yes" :true] ["no" :false] ["defined" :any]]}]
+              :options '[["yes" "true"] ["no" "false"] ["defined" "any"]]}]
      :query-builder :query-primitive-field}
     (:long :float)             
     {:message0 (str (name field) " %2 %1")
@@ -220,23 +220,42 @@
 (defn field-def [kind field]
   (get-in (schema/kind-def kind) [:fields field]))
 
-(defn kind-field-blockdef
-  [kind field invert?]
-  (let [{:keys [type attribute]} (if invert? ;??? not sure about this
-                                   {:type field :attribute (keyword field kind)}
-                                   (field-def kind field))]
+
+(defn base-block
+  [kind field attribute]
+  {:type (str (name kind) "_" (name field))
+   :previousStatement (str (name kind) "_constraint")
+   :nextStatement (str (name kind) "_constraint")
+   :colour (kind-color kind)
+   :helpUrl (alzabo-url kind)
+   :attribute (or attribute (keyword (name kind) (name field)))
+   :input (or (:type (field-def kind field))
+              field)
+   })
+
+
+;;; eg :measurement :measurement-set {:type :measurement-set,    :cardinality :many,    :doc "The measurement values for this measurement set",    :attribute :measurement-set/measurements}
+(defn kind-field-inverse-blockdef
+  [kind {:keys [type attribute]}]
+  (let [field type]
+    (merge
+     {:invert? true}
+     (field-def-type field field)
+     (base-block kind field attribute))))
+
+
+(defn kind-field-forward-blockdef
+  [kind field]
+  ;; TODO this is wrong, some attributes are plural eg :measurement-set/measurements
+  (let [{:keys [type attribute]} (field-def kind field)]
     (when-let [field-def (field-def-type field type)]
       (merge
        field-def
-       {:type (str (name kind) "_" (name field))
-        :previousStatement (str (name kind) "_constraint")
-        :nextStatement (str (name kind) "_constraint")
-        :colour (kind-color kind)
-        :helpUrl (alzabo-url kind)
-        :attribute (or attribute (keyword (name kind) (name field)))
-        :input type
-        :invert? invert?
-        }))))
+       (base-block kind field attribute)
+       ))))
+
+
+
 
 ;;; ⊓⊔⊓⊔ Complex relations ⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔⊓⊔
 
@@ -354,12 +373,11 @@
     (concat 
      ;; forward relations
      (map (fn [field]
-            (kind-field-blockdef kind field false))
+            (kind-field-forward-blockdef kind field))
           (keys (schema/kind-fields kind)))
      ;; inverse relations
-     (map (fn [[other-kind adef]]
-            (let [adef (first adef)] 
-              (kind-field-blockdef kind other-kind true)))
+     (map (fn [[other-kind [adef]]]
+            (kind-field-inverse-blockdef kind adef))
           (kind (schema/inverse-relations)))
      (kind-complex-blockdefs kind))
     (filter identity)

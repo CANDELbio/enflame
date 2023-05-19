@@ -24,7 +24,7 @@
   [item]
   (or (::label item) (::description item) (::query item)))
 
-(def big-keys #{::blockdef ::image})
+#_(def big-keys #{::blockdef ::image})
 
 
 ;;; Convert from gcs
